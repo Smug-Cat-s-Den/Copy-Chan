@@ -15,6 +15,7 @@ pub struct ClipboardState {
 //global filepath store
 static COPY_PATH: OnceCell<PathBuf> = OnceCell::new();
 
+
 fn set_global_data_path(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let mut path = app.path().app_config_dir()?;
     path.push("copyhistory");
@@ -56,15 +57,14 @@ fn show_window(app: tauri::AppHandle) {
 
 #[tauri::command]
 fn show_window_using_shortcut(app: tauri::AppHandle) {
-    println!("window will show");
     window_pos(app, true);
+    println!("window will show");
 }
 
 // utils
 fn window_pos(app: AppHandle, is_shortcut: bool) {
     if let Some(main_window) = app.get_webview_window("main") {
         let pos = Mouse::get_mouse_position();
-
         match pos {
             Mouse::Position { x, y } => {
                 if is_shortcut {
@@ -92,6 +92,7 @@ fn window_pos(app: AppHandle, is_shortcut: bool) {
             _ => eprintln!("Could not get mouse position"),
         }
 
+        let _ = main_window.set_visible_on_all_workspaces(true);
         let _ = main_window.show();
         let _ = main_window.set_focus();
     }
@@ -99,6 +100,7 @@ fn window_pos(app: AppHandle, is_shortcut: bool) {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    std::env::set_var("GDK_BACKEND", "x11");
     tauri::Builder::default()
         .manage(ClipboardState {
             ignore_next: AtomicBool::new(false),
