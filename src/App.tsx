@@ -22,7 +22,7 @@ function App() {
     <main className="container select-none">
       <Nav ActiveTab={ActiveTab} SetActiveTab={SetActiveTab} />
       <strong className="flex justify-center">{ActiveTab.label}</strong>
-      <div className="content overflow-y-scroll h-100 scroll-smooth mx-1">
+      <div className="content overflow-y-scroll h-100 scroll-smooth mx-1 rounded-2xl">
         {ActiveTab.label === "copy" && <Copy />}
         {ActiveTab.label === "emoji" && (
           <Emoji title={ActiveTab.label} emotes={graphicEmojiArray} />

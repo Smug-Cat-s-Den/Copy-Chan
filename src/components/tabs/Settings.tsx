@@ -33,7 +33,7 @@ const Settings = () => {
   }, []);
 
   return (
-    <main className="px-3">
+    <main className="px-3 mt-1">
       <section className="bg-blue-600/20 p-3 rounded-md">
         <div className="flex justify-between items-center">
           <strong>Enable StartUp</strong>
@@ -46,21 +46,21 @@ const Settings = () => {
       <section className="mt-3 bg-blue-600/20 p-3 rounded-md">
         <div className="flex justify-between  items-center">
           <h1 >Quick access CopyChan</h1>
-          <span className="bg-blue-600/50 p-2 rounded-md text-sm font-mono">{shortcuts.open}</span>
+          <span className="bg-blue-600/50 p-2 rounded-md text-xs font-mono">{shortcuts.open}</span>
         </div>
         <p className="text-[13px] mt-2 text-gray-300">
-          Used to quickly open up the application <br />
-          <div className="flex gap-2 items-center bg-red-400 p-1 mt-2 rounded">
-            <IoWarningSharp size={20} className="text-yellow-500"/>
-            <div className="text-gray-300 pt-1.5">Shortcut may not work on Wayland or other DEs</div>
+          Used to quickly open up the application,<br/>(keybind customizations will be added in the future)<br />
+          <div className="flex gap-2 items-start bg-red-400 p-1 mt-2 rounded">
+            <IoWarningSharp size={50} className="text-yellow-500 pb-3.5"/>
+            <div className="text-white pt-1.5">Global hotkeys may be restricted by the compositor. If shortcuts do not trigger, please switch to an x11 session for full compatibility.</div>
           </div>
         </p>
       </section>
 
       <footer>
         <section className="select-none flex gap-2 items-end">
-          <img src={"/Copychan.png"} alt="copychan" draggable="false" />
-          <div className="pb-6">
+          <img src={"/Copychan.png"} alt="copychan" draggable="false" width={100} />
+          <div className="pb-3">
             <h1 className="text-[13px] dark:text-gray-300 text-gray-700">build {AppVersion}</h1>
             <h1>Support me</h1>
             <span className="flex gap-2">

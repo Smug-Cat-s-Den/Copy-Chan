@@ -2,7 +2,7 @@ pub mod copy_logic;
 
 use crate::copy_logic::{
     cblisten::{cblisten, copy_and_ignore},
-    copy::{copy_history_add, del_entry, get_enties_limit_by_user, get_history, pin_history},
+    copy::{copy_history_add, del_entry, get_enties_limit_by_user, get_history, pin_history, delete_all},
 };
 use mouse_position::mouse_position::Mouse;
 use once_cell::sync::OnceCell;
@@ -115,6 +115,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::default().build())
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             match set_global_data_path(app) {
                 Ok(()) => {}
@@ -135,7 +136,8 @@ pub fn run() {
             show_window,
             show_window_using_shortcut,
             hide_window,
-            copy_and_ignore
+            copy_and_ignore,
+            delete_all
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
