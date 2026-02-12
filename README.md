@@ -3,9 +3,17 @@
 **Copy Chan** is a cross-platform desktop clipboard/history manager with a Emoji and symbols picker, built with **Tauri (Rust)** and **React + Vite**. Primarily made and optimized for **linux**.
 <br>this README explains what the project is, how to run it locally, and known issues you may encounter if you plan to run it.
 <br/>
-check [release](https://github.com/aditya-wuw/Copy-Chan/releases/tag/v0.0.7) for more information about how to install this app **(Only Linux)**
+check [release](https://github.com/aditya-wuw/Copy-Chan/releases/tag/0.0.8) for more information about how to install this app **(Only Linux)**
 <br>
 if you found this helpful make sure to 🌟 star this project and [follow](https://github.com/aditya-wuw) for more future ventures (＾ ▽ ＾)/
+
+## ⚠️ Important Info
+
+This project relies on some dependencies that are used for encrypting the saved clipboard data. Please consider installing them first before proceeding with the actual installation.
+```bash  
+sudo apt install libsecret-1-0 gnome-keyring
+```
+
 
 ## 🚧 Current status: under testing
 
@@ -22,6 +30,7 @@ This project is open-source for transparency and personal use. If you would like
 Copy chan aims to be a lightweight, privacy-respecting clipboard manager for Linux and other platforms with features such as:
 
 - Persistent clipboard history ✅
+- data encryption ✅
 - Keyboard shortcuts to open history and paste entries near user's ✅
 - Small, native desktop experience using Tauri (low overhead) ✅
 - a section for picking Emojis and symbols ✅

@@ -1,8 +1,9 @@
 use crate::COPY_PATH;
+use crate::copy_logic::encrypt::{decrypt_data, encrypt_data};
 use serde::{Deserialize, Serialize};
 use serde_json::Number;
 use std::fs::{self, File};
-use std::io::{Read, Write};
+use std::io::{Write};
 use std::path::PathBuf;
 use uuid::Uuid;
 #[derive(Deserialize, Serialize, Debug)]
@@ -20,9 +21,9 @@ fn file_data_path() -> &'static PathBuf {
 }
 
 fn write_file(json: String) {
+    let encrypted_bytes = encrypt_data(json.as_bytes()).expect("Encryption failed");
     let mut file = File::create(file_data_path()).expect("Failed to create file");
-    file.write_all(json.as_bytes())
-        .expect("Failed to write to file");
+    file.write_all(&encrypted_bytes).expect("Failed to write to file");
 }
 
 #[tauri::command]
@@ -32,105 +33,88 @@ pub fn get_enties_limit_by_user(limit: Number) {
 
 #[tauri::command]
 pub fn copy_history_add(content: String) -> Result<(), String> {
-    // structure
+ 
     let new_item = CopyBord {
         id: Uuid::new_v4(),
-        item: content.clone(),
+        item: content,
         pinned: false,
     };
-    // adds the directory if it's missing on the project root
+
     if let Some(parent) = std::path::Path::new(file_data_path()).parent() {
         fs::create_dir_all(parent).map_err(|e| format!("Failed to create directory: {}", e))?;
     }
-    //check and decirialize the existing json
-    let mut history: Vec<CopyBord> = match File::open(file_data_path()) {
-        Ok(mut file) => {
-            let mut json_str = String::new();
-            if file.read_to_string(&mut json_str).is_ok() && !json_str.is_empty() {
-                serde_json::from_str(&json_str).unwrap_or_else(|e| {
-                    eprintln!("Error deserializing JSON: {}", e);
-                    Vec::new() // Fallback to empty if deserialization fails
-                })
-            } else {
-                Vec::new()
-            }
-        }
-        Err(_) => {
-            //start with an empty history
-            Vec::new()
-        }
-    };
+
+    let mut history: Vec<CopyBord> = get_history().unwrap_or_else(|_| Vec::new());
 
     history.insert(0, new_item);
-
     if history.len() > MAX_ENTRIES {
-        history.truncate(MAX_ENTRIES); // removes oldest records
+        history.truncate(MAX_ENTRIES); 
     }
-
-    let json_string = serde_json::to_string_pretty(&history).expect("Failed to serialize to JSON");
+    let json_string = serde_json::to_string_pretty(&history)
+        .map_err(|e| format!("Failed to serialize history: {}", e))?;
     write_file(json_string);
     Ok(())
 }
 
+
 //getting records
 #[tauri::command]
 pub fn get_history() -> Result<Vec<CopyBord>, String> {
-    let json_data = match fs::read_to_string(file_data_path()) {
-        Ok(data) => data,
-        Err(_) => return Ok(vec![]),
-    };
-    let history: Vec<CopyBord> =
-        serde_json::from_str(&json_data).map_err(|e| format!("JSON read failed: {}", e))?;
-
-    Ok(history)
-}
-
-//delete logic
-#[tauri::command]
-pub fn del_entry(id: String) -> Result<(), std::string::String> {
-    let target_uuid: Uuid = match Uuid::parse_str(&id) {
-        Ok(uuid) => uuid,
-        Err(e) => return Err(format!("Invalid uuid for deletion: {}", e)),
-    };
-
-    //read file
-    let json_file = match fs::read_to_string(file_data_path()) {
+    let encrypted_data = match fs::read(file_data_path()) {
         Ok(data) => data,
         Err(e) => {
             if e.kind() == std::io::ErrorKind::NotFound {
-                return Ok(());
+                return Ok(vec![]);
             }
-            return Err(format!("Failed to read history file: {}", e));
+            return Err(format!("File read error: {}", e));
         }
     };
 
-    //deserialize
-    let mut history: Vec<CopyBord> = match serde_json::from_str(&json_file) {
-        Ok(h) => h,
-        Err(e) => return Err(format!("Failed to deserialize history data: {}", e)),
-    };
-    let initiallen = history.len();
+    if encrypted_data.is_empty() { 
+        return Ok(vec![]); 
+    }
+
+    let decrypted_bytes = decrypt_data(&encrypted_data)
+        .map_err(|e| format!("Decryption failed: {}. (Check if your key has changed)", e))?;
+
+    let history: Vec<CopyBord> = serde_json::from_slice(&decrypted_bytes)
+    .map_err(|e| format!("JSON parsing failed: {}", e))?;
+    Ok(history)
+}
+
+#[tauri::command]
+pub fn del_entry(id: String) -> Result<(), String> {
+    let target_uuid = Uuid::parse_str(&id)
+        .map_err(|e| format!("Invalid uuid for deletion: {}", e))?;
+    let mut history = get_history().unwrap_or_else(|_| Vec::new());
+
+    let initial_len = history.len();
+
     history.retain(|entry| entry.id != target_uuid);
 
-    //verify the deletion
-    if history.len() == initiallen {
+    if history.len() == initial_len {
         println!("Entry with id: {} not found.", id);
         return Ok(());
-    } else {
-        println!("Entry with id: {} deleted.", id);
     }
-    //Serialize the modified vector back into a JSON string
-    let json_string = match serde_json::to_string_pretty(&history) {
-        Ok(s) => s,
-        Err(e) => return Err(format!("Failed to serialize history: {}", e)),
-    };
 
-    match File::create(file_data_path()).and_then(|mut file| file.write_all(json_string.as_bytes()))
-    {
-        Ok(_) => Ok(()),
-        Err(e) => Err(format!("Failed to write updated history to file: {}", e)),
-    }
+    println!("Entry with id: {} deleted.", id);
+    let json_string = serde_json::to_string_pretty(&history)
+        .map_err(|e| format!("Failed to serialize history: {}", e))?;
+
+    write_file(json_string);
+    Ok(())
 }
+
+//delete all
+#[tauri::command]
+pub fn delete_all() -> Result<(), String> {
+    let mut history = get_history()?;
+    history.clear();
+    let json_file = serde_json::to_string_pretty(&history).map_err(|e| e.to_string())?;
+    write_file(json_file);
+    Ok(())
+}
+
 
 //pin logic
 #[tauri::command]

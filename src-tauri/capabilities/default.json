@@ -8,6 +8,8 @@
     "core:window:allow-theme",
     "core:window:allow-set-theme",
     "opener:default",
+    "dialog:default",
+    "dialog:allow-ask",
     "global-shortcut:default",
     "global-shortcut:allow-register",
     "global-shortcut:allow-unregister",
