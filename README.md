@@ -1,19 +1,38 @@
 # Copy Chan — Smol Clipboard manager :3 <br>![Copy Chan](src-tauri/icons/Copychan.png)
 
 **Copy Chan** is a cross-platform desktop clipboard/history manager with a Emoji and symbols picker, built with **Tauri (Rust)** and **React + Vite**. Primarily made and optimized for **linux**.
-<br>this README explains what the project is, how to run it locally, and known issues you may encounter if you plan to run it.
-<br/>
-check [release](https://github.com/aditya-wuw/Copy-Chan/releases/tag/0.0.8) for more information about how to install this app **(Only Linux)**
-<br>
+<br>this README explains what the project is, how to run it locally, and known issues you may encounter if you plan to run it. 
 if you found this helpful make sure to 🌟 star this project and [follow](https://github.com/aditya-wuw) for more future ventures (＾ ▽ ＾)/
 
 ## ⚠️ Important Info
 
 This project relies on some dependencies that are used for encrypting the saved clipboard data. Please consider installing them first before proceeding with the actual installation.
+* Ubuntu / Debian / Mint
 ```bash  
-sudo apt install libsecret-1-0 gnome-keyring
+   sudo apt install libsecret-1-0 gnome-keyring
+```
+* Fedora / RHEL / Rocky
+```bash  
+   sudo dnf install libsecret gnome-keyring
+```
+* Arch Linux BTW / Manjaro
+```bash  
+   sudo pacman -S libsecret gnome-keyring
+```
+<br/>
+currently the install binary is only exported in .deb as I was using Ubuntu, you can compile your own binary by cloning the project and then run
+<br/>
+
+```bash  
+npm run tauri build
 ```
 
+learn more about Tauri builds [here](https://tauri.app/distribute/)<br>
+I'll provide a fully compiled version for all distros and platforms once I make sure the app is stable.
+<br/>
+check [release](https://github.com/aditya-wuw/Copy-Chan/releases/tag/0.0.8)
+**( tested on Ubuntu LTS )**
+<br>
 
 ## 🚧 Current status: under testing
 
