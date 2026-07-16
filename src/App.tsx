@@ -4,10 +4,13 @@ import Copy from "./components/tabs/Copy";
 import { TabItem } from "./types/app.types";
 import Nav from "./components/nav/Nav";
 import { setupTray } from "./utils/systemtray";
-import Emoji from "./components/tabs/Emoji";
-import { graphicEmojiArray, symbolEmoticonArray } from "./utils/emojidata";
 import Settings from "./components/tabs/Settings";
 import { register_shortcut } from "./utils/RegisterShortcut";
+import EmojiPicker from "./components/tabs/EmojiPicker";
+
+// Emojis Array
+import { graphicEmojiArray } from "./EmojiData/Visual";
+import { symbolEmoticonArray } from "./EmojiData/SymbolsAndASCII";
 
 //shortcut
 
@@ -25,10 +28,10 @@ function App() {
       <div className="content overflow-y-scroll h-100 scroll-smooth mx-1 rounded-2xl">
         {ActiveTab.label === "copy" && <Copy />}
         {ActiveTab.label === "emoji" && (
-          <Emoji title={ActiveTab.label} emotes={graphicEmojiArray} />
+          <EmojiPicker title={ActiveTab.label} emotes={graphicEmojiArray} />
         )}
         {ActiveTab.label === "symbols" && (
-          <Emoji title={ActiveTab.label} emotes={symbolEmoticonArray} />
+          <EmojiPicker title={ActiveTab.label} emotes={symbolEmoticonArray} />
         )}
         {ActiveTab.label === "Settings" && <Settings />}
       </div>

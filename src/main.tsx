@@ -7,7 +7,7 @@ const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <main
     onContextMenu={handleContextMenu}
-    className="border dark:bg-gray-800 dark:border-blue-900 border-blue-800 dark:text-white bg-white rounded-xl overflow-hidden h-screen"
+    className="border dark:bg-blue-900 dark:border-blue-900  border-blue-800  dark:text-white bg-white rounded-md overflow-hidden h-screen"
   >
     <App />
   </main>,

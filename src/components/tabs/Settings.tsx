@@ -33,7 +33,7 @@ const Settings = () => {
   }, []);
 
   return (
-    <main className="px-3 mt-1">
+    <main className="px-3">
       <section className="bg-blue-600/20 p-3 rounded-md">
         <div className="flex justify-between items-center">
           <strong>Enable StartUp</strong>

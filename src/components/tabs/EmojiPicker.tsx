@@ -7,7 +7,7 @@ interface props {
   emotes: Emojies[];
   title: string;
 }
-const Emoji = ({ emotes, title }: props) => {
+const EmojiPicker = ({ emotes, title }: props) => {
   const [Filtered, SetFiltered] = useState<Emojies[]>(emotes);
   const [symbol, setSymbol] = useState<GroupedEmojies>();
 
@@ -24,7 +24,7 @@ const Emoji = ({ emotes, title }: props) => {
     <main className="mt-2 mx-2 relative">
       <nav className="sticky top-0 z-10">
         <SearchBox Searchdata={emotes} SetFiltered={SetFiltered} />
-        <div className="h-3 dark:bg-gray-800 bg-white"/>
+        <div className="h-3 dark:dark:bg-blue-900 bg-white" />
       </nav>
       <div>
         {Filtered.length > 0 && symbol ? (
@@ -63,4 +63,4 @@ const Emoji = ({ emotes, title }: props) => {
   );
 };
 
-export default Emoji;
+export default EmojiPicker;
