@@ -1,9 +1,9 @@
 use crate::COPY_PATH;
-use crate::copy_logic::encrypt::{decrypt_data, encrypt_data};
+// use crate::copy_logic::encrypt::{decrypt_data, encrypt_data};
 use serde::{Deserialize, Serialize};
 use serde_json::Number;
 use std::fs::{self, File};
-use std::io::{Write};
+use std::io::Write;
 use std::path::PathBuf;
 use uuid::Uuid;
 #[derive(Deserialize, Serialize, Debug)]
@@ -21,9 +21,10 @@ fn file_data_path() -> &'static PathBuf {
 }
 
 fn write_file(json: String) {
-    let encrypted_bytes = encrypt_data(json.as_bytes()).expect("Encryption failed");
+    // let encrypted_bytes = encrypt_data(json.as_bytes()).expect("Encryption failed");
     let mut file = File::create(file_data_path()).expect("Failed to create file");
-    file.write_all(&encrypted_bytes).expect("Failed to write to file");
+    file.write_all(json.as_bytes())
+        .expect("Failed to write to file");
 }
 
 #[tauri::command]
@@ -33,7 +34,6 @@ pub fn get_enties_limit_by_user(limit: Number) {
 
 #[tauri::command]
 pub fn copy_history_add(content: String) -> Result<(), String> {
- 
     let new_item = CopyBord {
         id: Uuid::new_v4(),
         item: content,
@@ -48,7 +48,7 @@ pub fn copy_history_add(content: String) -> Result<(), String> {
 
     history.insert(0, new_item);
     if history.len() > MAX_ENTRIES {
-        history.truncate(MAX_ENTRIES); 
+        history.truncate(MAX_ENTRIES);
     }
     let json_string = serde_json::to_string_pretty(&history)
         .map_err(|e| format!("Failed to serialize history: {}", e))?;
@@ -56,11 +56,10 @@ pub fn copy_history_add(content: String) -> Result<(), String> {
     Ok(())
 }
 
-
 //getting records
 #[tauri::command]
 pub fn get_history() -> Result<Vec<CopyBord>, String> {
-    let encrypted_data = match fs::read(file_data_path()) {
+    let history_data = match fs::read(file_data_path()) {
         Ok(data) => data,
         Err(e) => {
             if e.kind() == std::io::ErrorKind::NotFound {
@@ -70,22 +69,22 @@ pub fn get_history() -> Result<Vec<CopyBord>, String> {
         }
     };
 
-    if encrypted_data.is_empty() { 
-        return Ok(vec![]); 
-    }
+    // if encrypted_data.is_empty() {
+    //     return Ok(vec![]);
+    // }
 
-    let decrypted_bytes = decrypt_data(&encrypted_data)
-        .map_err(|e| format!("Decryption failed: {}. (Check if your key has changed)", e))?;
+    // let decrypted_bytes = decrypt_data(&encrypted_data)
+    //     .map_err(|e| format!("Decryption failed: {}. (Check if your key has changed)", e))?;
 
-    let history: Vec<CopyBord> = serde_json::from_slice(&decrypted_bytes)
-    .map_err(|e| format!("JSON parsing failed: {}", e))?;
+    let history: Vec<CopyBord> =
+        serde_json::from_slice(&history_data).map_err(|e| format!("JSON parsing failed: {}", e))?;
     Ok(history)
 }
 
 #[tauri::command]
 pub fn del_entry(id: String) -> Result<(), String> {
-    let target_uuid = Uuid::parse_str(&id)
-        .map_err(|e| format!("Invalid uuid for deletion: {}", e))?;
+    let target_uuid =
+        Uuid::parse_str(&id).map_err(|e| format!("Invalid uuid for deletion: {}", e))?;
     let mut history = get_history().unwrap_or_else(|_| Vec::new());
 
     let initial_len = history.len();
@@ -114,7 +113,6 @@ pub fn delete_all() -> Result<(), String> {
     write_file(json_file);
     Ok(())
 }
-
 
 //pin logic
 #[tauri::command]

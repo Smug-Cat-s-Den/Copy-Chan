@@ -2,7 +2,9 @@ pub mod copy_logic;
 
 use crate::copy_logic::{
     cblisten::{cblisten, copy_and_ignore},
-    copy::{copy_history_add, del_entry, get_enties_limit_by_user, get_history, pin_history, delete_all},
+    copy::{
+        copy_history_add, del_entry, delete_all, get_enties_limit_by_user, get_history, pin_history,
+    },
 };
 use mouse_position::mouse_position::Mouse;
 use once_cell::sync::OnceCell;
@@ -12,15 +14,18 @@ use tauri::{AppHandle, Manager, PhysicalPosition};
 pub struct ClipboardState {
     pub ignore_next: AtomicBool,
 }
+
 //global filepath store
 static COPY_PATH: OnceCell<PathBuf> = OnceCell::new();
-
 
 fn set_global_data_path(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let mut path = app.path().app_config_dir()?;
     path.push("copyhistory");
     std::fs::create_dir_all(&path)?;
     path.push("copy_data.json");
+
+    // println!("{}", path.display());
+
     COPY_PATH.set(path).expect("Path already set");
     Ok(())
 }
@@ -61,7 +66,7 @@ fn show_window_using_shortcut(app: tauri::AppHandle) {
     println!("window will show");
 }
 
-// utils
+// Window position calculation
 fn window_pos(app: AppHandle, is_shortcut: bool) {
     if let Some(main_window) = app.get_webview_window("main") {
         let pos = Mouse::get_mouse_position();
