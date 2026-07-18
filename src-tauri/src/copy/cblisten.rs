@@ -5,7 +5,7 @@ use tauri::Emitter;
 use tauri::Manager;
 use tauri_plugin_clipboard_manager::ClipboardExt;
 
-use crate::copy_logic::copy::copy_history_add;
+use crate::copy::copy::copy_history_add;
 use crate::ClipBoardState;
 
 #[tauri::command]

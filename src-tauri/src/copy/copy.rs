@@ -1,12 +1,14 @@
 use crate::core::load_and_save::save_history;
 use crate::COPY_HISTROY;
-// use crate::copy_logic::encrypt::{decrypt_data, encrypt_data};
 use serde::{Deserialize, Serialize};
 use serde_json::Number;
-// use std::fs::{self, File};
-// use std::io::Write;
 use std::sync::{Mutex, MutexGuard};
 use uuid::Uuid;
+
+// Constants
+const MAX_ENTRIES: usize = 10;
+
+// Stucts
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct CopyRecord {
     id: Uuid,
@@ -14,24 +16,19 @@ pub struct CopyRecord {
     pinned: bool,
 }
 
-const MAX_ENTRIES: usize = 10;
-
-fn get_global_history_mutex() -> MutexGuard<'static, Vec<CopyRecord>> {
+// Helpers
+pub fn get_global_history_mutex() -> MutexGuard<'static, Vec<CopyRecord>> {
     COPY_HISTROY
         .get_or_init(|| Mutex::new(Vec::new()))
         .lock()
         .unwrap()
 }
 
-// fetch the global Vec<CopyRecords> state for storing clipbord data
 /*
-fn write_file(json: String) {
-    // let encrypted_bytes = encrypt_data(json.as_bytes()).expect("Encryption failed");
-    let mut file = File::create(file_data_path()).expect("Failed to create file");
-    file.write_all(json.as_bytes())
-        .expect("Failed to write to file");
-}
- */
+ *
+ Main command functions
+ Defined functions that must be invoked from the Frontend client
+*/
 
 #[tauri::command]
 pub fn get_enties_limit_by_user(limit: Number) {
@@ -52,7 +49,7 @@ pub fn copy_history_add(content: String) -> Result<(), String> {
     if history.len() > MAX_ENTRIES {
         history.truncate(MAX_ENTRIES);
     }
-    save_history();
+    save_history(&history).map_err(|e| format!("Failded to Save data {}", e))?;
     Ok(())
 }
 
@@ -67,6 +64,23 @@ pub fn get_history() -> Result<Vec<CopyRecord>, String> {
         }
         None => Ok(Vec::new()),
     }
+}
+
+//Pin
+#[tauri::command]
+pub fn pin_history(id: Uuid) -> Result<(), String> {
+    let mut history = get_global_history_mutex();
+    for rec in history.iter_mut() {
+        if rec.id == id {
+            if rec.pinned == true {
+                rec.pinned = false;
+            } else {
+                rec.pinned = true;
+            };
+        }
+    }
+    save_history(&history).map_err(|e| format!("Failded to Save data {}", e))?;
+    Ok(())
 }
 
 //Delete
@@ -87,27 +101,10 @@ pub fn del_entry(id: String) -> Result<(), String> {
     }
 }
 
-//delete all
+//Delete all
 #[tauri::command]
 pub fn delete_all() -> Result<(), String> {
     let mut history = get_global_history_mutex();
-    // clear the Vec<CopyRecord> global state
     history.clear();
-    Ok(())
-}
-
-//Pin
-#[tauri::command]
-pub fn pin_history(id: Uuid) -> Result<(), String> {
-    let mut history = get_global_history_mutex();
-    for rec in history.iter_mut() {
-        if rec.id == id {
-            if rec.pinned == true {
-                rec.pinned = false;
-            } else {
-                rec.pinned = true;
-            };
-        }
-    }
     Ok(())
 }

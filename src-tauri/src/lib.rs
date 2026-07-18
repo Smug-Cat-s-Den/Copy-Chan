@@ -1,18 +1,16 @@
-pub mod copy_logic;
+pub mod copy;
 pub mod core;
 
-// imported functions from copy_logic
 use crate::{
-    copy_logic::{
+    copy::{
         cblisten::{cblisten, copy_and_ignore},
         copy::{
             copy_history_add, del_entry, delete_all, get_enties_limit_by_user, get_history,
             pin_history, CopyRecord,
         },
     },
-    core::{load_and_save::load_history, setup::app_setup},
+    core::load_and_save::load_history,
 };
-// modules
 use mouse_position::mouse_position::Mouse;
 use once_cell::sync::OnceCell;
 use std::{
@@ -35,8 +33,7 @@ fn set_global_data_path(app: &mut tauri::App) -> Result<(), Box<dyn std::error::
     let mut path = app.path().app_config_dir()?;
     path.push("copyhistory");
     std::fs::create_dir_all(&path)?;
-    path.push("copy_data.json");
-
+    path.push("data.bin");
     // println!("{}", path.display());
     COPY_PATH.set(path).expect("Path already set");
     Ok(())
@@ -141,9 +138,8 @@ pub fn run() {
                 }
             };
             listen_to_clipbord(app_handle);
-            app_setup(app_handle);
             // here decrypt the encrypted data from drive and store to global Vec<CopyRecords>
-            load_history();
+            load_history().map_err(|e| e.to_string())?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
