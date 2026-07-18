@@ -77,30 +77,22 @@ Prerequisites:
 - NodeJS (v18+ recommended) and npm or pnpm
 - Rust toolchain and cargo (for Tauri / desktop builds)
 - Platform dependencies for WebKitGTK (see Troubleshooting below)
+- Strawberry Perl is required for building rusqlite with "bundled-sqlcipher-vendored-openssl" feature
 
-Typical steps to run the app in development mode (frontend):
-
-```bash
-# install frontend deps
-npm install
-
-# run Vite development server
-npm run dev
-```
+## Typical steps to run the app in development mode (frontend):
 
 To run the Tauri desktop build/dev mode (desktop + Rust backend):
 
 ```bash
 # start development with Tauri (may build both frontend and backend code)
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 To build production packages:
 
 ```bash
-npm run build
 # then build native packages with the Tauri CLI
-npm run tauri build
+pnpm run tauri build
 ```
 
 ```bash
