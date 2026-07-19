@@ -7,7 +7,7 @@ export const currentWindow = WebviewWindow.getCurrent();
 
 export async function HandleCopy(item: string) {
   if (!item) return;
-  await invoke("copy_and_ignore",{item});
+  await invoke("copy_and_ignore", { item });
   await appWindow.hide();
 }
 

@@ -16,7 +16,9 @@ import { symbolEmoticonArray } from "./EmojiData/SymbolsAndASCII";
 
 function App() {
   const [ActiveTab, SetActiveTab] = useState<TabItem>({ label: "copy" });
+
   useEffect(() => {
+    import("./components/tabs/EmojiPicker");
     setupTray();
     register_shortcut();
   }, []);
