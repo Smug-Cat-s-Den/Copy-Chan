@@ -16,7 +16,7 @@
       {
         "title": "copychan",
         "width": 400,
-        "height": 500,
+        "height": 430,
         "resizable": false,
         "alwaysOnTop": true,
         "decorations": false,

@@ -8,7 +8,7 @@ interface props {
 }
 
 const SearchBox = ({ Searchdata, SetFiltered }: props) => {
-  let data = Searchdata
+  let data = Searchdata;
   const handlesearch = (SearchTerms: string) => {
     const terms = SearchTerms.toLowerCase().trim();
     if (!terms) return SetFiltered(Searchdata);

@@ -111,9 +111,3 @@ pub fn decrypt_data(encrypted_file: &Vec<u8>) -> Result<String, String> {
     let final_output: String = String::from_utf8(unecrypted_bytes).map_err(|e| e.to_string())?;
     Ok(final_output)
 }
-
-pub fn test() {
-    println!("-----Test-----");
-    // println!("{:?}", *SYSTEM_ENCRYPTION_KEY);
-    println!("--------------");
-}

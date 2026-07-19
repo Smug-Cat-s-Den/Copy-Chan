@@ -42,7 +42,7 @@ pub fn cblisten(app_handle: tauri::AppHandle) {
                     }
                     let _ = copy_history_add(text);
                 }
-                Err(e) => eprintln!("Failed reading clipboard: {:?}", e),
+                Err(e) => eprintln!("Failed to read clipboard: {:?}", e),
             }
         });
     };
@@ -51,6 +51,3 @@ pub fn cblisten(app_handle: tauri::AppHandle) {
         eprintln!("Clipboard listener error: {:?}", e);
     }
 }
-
-
-
