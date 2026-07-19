@@ -8,10 +8,11 @@ interface props {
 }
 
 const SearchBox = ({ Searchdata, SetFiltered }: props) => {
-  function handlesearch(SearchTerms: string) {
+  let data = Searchdata;
+  const handlesearch = (SearchTerms: string) => {
     const terms = SearchTerms.toLowerCase().trim();
     if (!terms) return SetFiltered(Searchdata);
-    const f = Searchdata.filter((i) => {
+    const f = data.filter((i) => {
       const EmojiMatch = i.emoji.toLowerCase().trim().includes(terms);
       const LabelMatch = i.label.toLowerCase().trim().includes(terms);
       const typeMatch = i.type.toLowerCase().includes(terms);
@@ -19,7 +20,7 @@ const SearchBox = ({ Searchdata, SetFiltered }: props) => {
       return KeywordsMatch || EmojiMatch || LabelMatch || typeMatch;
     });
     SetFiltered(f);
-  }
+  };
 
   return (
     <div>

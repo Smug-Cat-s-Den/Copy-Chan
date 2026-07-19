@@ -13,13 +13,16 @@ type NavProps = {
 const Nav = ({ ActiveTab, SetActiveTab }: NavProps) => {
   const items: TabItem[] = [
     { label: "copy", icon: <BiClipboard /> },
-    { label: "emoji", icon: <BsEmojiSmile /> },
     { label: "symbols", icon: <SiSymbolab /> },
-    { label: "Settings", icon: <FaGear /> }
+    { label: "emoji", icon: <BsEmojiSmile /> },
+    { label: "Settings", icon: <FaGear /> },
   ];
-    
+
   return (
-    <nav data-tauri-drag-region className="sticky z-10 flex justify-between items-center w-full pt-2">
+    <nav
+      data-tauri-drag-region
+      className="sticky z-10 flex justify-between items-center w-full pt-2"
+    >
       <div className="grid grid-cols-4 gap-4 place-items-center group ml-3">
         {items.map((i, index) => (
           <button
@@ -35,7 +38,9 @@ const Nav = ({ ActiveTab, SetActiveTab }: NavProps) => {
       </div>
       <button
         className="mb-3 hover:bg-red-500 mr-2 p-2 rounded-md"
-        onClick={() => {invoke("hide_window"),SetActiveTab(items[0])}}
+        onClick={() => {
+          (invoke("hide_window"), SetActiveTab(items[0]));
+        }}
       >
         <CgClose />
       </button>

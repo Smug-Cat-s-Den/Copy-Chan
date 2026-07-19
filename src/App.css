@@ -5,22 +5,53 @@
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
 }
 
-button{
+button {
   cursor: pointer;
 }
 /* Small helper to ensure full-height pages if needed */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   height: 10px;
   width: 4px;
 }
 
-::-webkit-scrollbar-thumb{
-  background-color: rgb(135, 135, 136);
+::-webkit-scrollbar-thumb {
+  background-color: royalblue;
   width: 4px;
   border-radius: 999px;
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-in forwards;
+  }
+  .animate-fade-up {
+    animation: fadeInMoveUp 0.2s ease-in-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInMoveUp {
+  from {
+    opacity: 0;
+    transform: translateY(10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0%);
+  }
 }
 /* All other layout / visual styles should be expressed using Tailwind utilities in the components */
