@@ -2,7 +2,6 @@
   "$schema": "https://schema.tauri.app/config/2.9.5",
   "productName": "copychan",
   "version": "0.0.8",
-
   "identifier": "con.Copychan",
   "build": {
     "removeUnusedCommands": true,

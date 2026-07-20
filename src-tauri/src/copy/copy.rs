@@ -1,12 +1,12 @@
-use crate::core::load_and_save::save_history;
-use crate::COPY_HISTROY;
+use crate::{core::load_and_save::save_history};
+use crate::{get_max_entries_mutex, COPY_HISTROY};
 use serde::{Deserialize, Serialize};
 use serde_json::Number;
 use std::sync::{Mutex, MutexGuard};
 use uuid::Uuid;
 
 // Constants
-const MAX_ENTRIES: usize = 10;
+// const MAX_ENTRIES: usize = 10;
 
 // Stucts
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -46,8 +46,8 @@ pub fn copy_history_add(content: String) -> Result<(), String> {
 
     let mut history = get_global_history_mutex();
     history.insert(0, new_item);
-    if history.len() > MAX_ENTRIES {
-        history.truncate(MAX_ENTRIES);
+    if history.len() > *get_max_entries_mutex() {
+        history.truncate(*get_max_entries_mutex());
     }
     save_history(&history).map_err(|e| format!("Failded to Save data {}", e))?;
     Ok(())

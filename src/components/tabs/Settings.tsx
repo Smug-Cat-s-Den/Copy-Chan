@@ -6,6 +6,8 @@ import { getVersion } from "@tauri-apps/api/app";
 import { BsYoutube } from "react-icons/bs";
 // import { IoWarningSharp } from "react-icons/io5";
 import RecordKeyBind from "../RecordKeyBind";
+import { IoWarningSharp } from "react-icons/io5";
+import Warning from "../settings/Warning";
 
 const AppVersion = await getVersion();
 const gh = "https://github.com/aditya-wuw/Copy-Chan";
@@ -13,11 +15,6 @@ const yt = "https://www.youtube.com/@NullTeams";
 
 const Settings = () => {
   const [isStartUpEnabled, SetStartUp] = useState<boolean>(true);
-
-  const shortcuts = {
-    open: "Ctrl+Alt+S",
-  };
-
   const StartUpCheck = useCallback(async () => {
     console.log(await isEnabled());
     let isStartUpEnabled = await isEnabled();
@@ -44,27 +41,31 @@ const Settings = () => {
           Automatically launches the application as soon as your operating system boots up
         </p>
       </section>
-      <section className="mt-3 bg-blue-600/20 p-3 rounded-md">
+      <section className="mt-3 bg-blue-600/20 p-3 rounded-md ">
         <div className="flex justify-between  items-center">
           <h1>Quick access CopyChan</h1>
           <RecordKeyBind />
-          {/*<span className="bg-blue-600/50 p-2 rounded-md text-xs font-mono">{shortcuts.open}</span>*/}
         </div>
-        {/*<div className="text-[13px] mt-2 text-gray-300">
-          Used to quickly open up the application,
-          <br />
-          (keybind customizations will be added in the future)
-          <br />
-          <div className="flex gap-2 items-start bg-red-400 p-1 mt-2 rounded">
-            <IoWarningSharp size={50} className="text-yellow-500 pb-3.5" />
-            <div className="text-white pt-1.5">
-              Global hotkeys may be restricted by the compositor. If shortcuts do not trigger,
-              please switch to an x11 session for full compatibility.
-            </div>
-          </div>
-        </div>*/}
+        <div className="text-[13px] mt-2 text-gray-300">
+          Quickly open up the application, hide using "Escape" key
+          <Warning />
+        </div>
       </section>
-
+      <section className="mt-3 bg-blue-600/20 p-3 rounded-md ">
+        <h1>Others</h1>
+        <div className="flex justify-between  items-center">
+          <span className="text-sm">Max Clipboard entries</span>
+          <div
+            className={`p-2 bg-linear-to-r from-blue-600  via-blue-600/90 transition duration-300 ease-in-out to-blue-600 text-white my-2 rounded-md text-sm`}
+          >
+            <input placeholder="20" className="w-10 text-center" />
+          </div>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-sm">Persist clipbord on drive</span>
+          <SliderButton value={isStartUpEnabled} SetValue={SetStartUp} />
+        </div>
+      </section>
       <footer>
         <section className="select-none flex gap-2 items-end">
           <img src={"/Copychan.png"} alt="copychan" draggable="false" width={100} />
