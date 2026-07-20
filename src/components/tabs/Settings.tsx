@@ -4,7 +4,8 @@ import { SliderButton } from "../SliderButton";
 import { GrGithub } from "react-icons/gr";
 import { getVersion } from "@tauri-apps/api/app";
 import { BsYoutube } from "react-icons/bs";
-import { IoWarningSharp } from "react-icons/io5";
+// import { IoWarningSharp } from "react-icons/io5";
+import RecordKeyBind from "../RecordKeyBind";
 
 const AppVersion = await getVersion();
 const gh = "https://github.com/aditya-wuw/Copy-Chan";
@@ -46,9 +47,10 @@ const Settings = () => {
       <section className="mt-3 bg-blue-600/20 p-3 rounded-md">
         <div className="flex justify-between  items-center">
           <h1>Quick access CopyChan</h1>
-          <span className="bg-blue-600/50 p-2 rounded-md text-xs font-mono">{shortcuts.open}</span>
+          <RecordKeyBind />
+          {/*<span className="bg-blue-600/50 p-2 rounded-md text-xs font-mono">{shortcuts.open}</span>*/}
         </div>
-        <div className="text-[13px] mt-2 text-gray-300">
+        {/*<div className="text-[13px] mt-2 text-gray-300">
           Used to quickly open up the application,
           <br />
           (keybind customizations will be added in the future)
@@ -60,7 +62,7 @@ const Settings = () => {
               please switch to an x11 session for full compatibility.
             </div>
           </div>
-        </div>
+        </div>*/}
       </section>
 
       <footer>

@@ -7,8 +7,6 @@ import Records from "../Records";
 import { VscPin } from "react-icons/vsc";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { ask } from "@tauri-apps/plugin-dialog";
-import { graphicEmojiArray } from "../../EmojiData/Visual";
-import EmojiPicker from "./EmojiPicker";
 
 const Copy = () => {
   const [History, setHistory] = useState<history[]>([]);

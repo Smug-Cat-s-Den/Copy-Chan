@@ -1,10 +1,10 @@
-import { invoke } from "@tauri-apps/api/core";
 import { TabItem } from "../../types/app.types";
 import { CgClose } from "react-icons/cg";
 import { BiClipboard } from "react-icons/bi";
 import { BsEmojiSmile } from "react-icons/bs";
 import { SiSymbolab } from "react-icons/si";
 import { FaGear } from "react-icons/fa6";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 type NavProps = {
   ActiveTab: TabItem;
   SetActiveTab: React.Dispatch<React.SetStateAction<TabItem>>;
@@ -12,9 +12,9 @@ type NavProps = {
 
 const Nav = ({ ActiveTab, SetActiveTab }: NavProps) => {
   const items: TabItem[] = [
-    { label: "copy", icon: <BiClipboard /> },
-    { label: "symbols", icon: <SiSymbolab /> },
-    { label: "emoji", icon: <BsEmojiSmile /> },
+    { label: "Copy", icon: <BiClipboard /> },
+    { label: "Symbols", icon: <SiSymbolab /> },
+    { label: "Emoji", icon: <BsEmojiSmile /> },
     { label: "Settings", icon: <FaGear /> },
   ];
 
@@ -39,7 +39,7 @@ const Nav = ({ ActiveTab, SetActiveTab }: NavProps) => {
       <button
         className="mb-3 hover:bg-red-500 mr-2 p-2 rounded-md"
         onClick={() => {
-          (invoke("hide_window"), SetActiveTab(items[0]));
+          (getCurrentWindow().hide(), SetActiveTab(items[0]));
         }}
       >
         <CgClose />

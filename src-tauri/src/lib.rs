@@ -47,15 +47,15 @@ fn listen_to_clipbord(app: &mut tauri::App) {
     });
 }
 
-#[tauri::command]
-fn hide_window(app: AppHandle) {
-    // println!("hiding the window");
-    if let Some(main_window) = app.get_webview_window("main") {
-        main_window.hide().unwrap();
-    } else {
-        println!("No window labeled 'main' found");
-    }
-}
+// #[tauri::command]
+// fn hide_window(app: AppHandle) {
+//     // println!("hiding the window");
+//     if let Some(main_window) = app.get_webview_window("main") {
+//         main_window.hide().unwrap();
+//     } else {
+//         println!("No window labeled 'main' found");
+//     }
+// }
 
 #[tauri::command]
 fn close_programe(app_handle: AppHandle) {
@@ -126,6 +126,7 @@ pub fn run() {
                 .set_focus();
         }))
         .plugin(tauri_plugin_autostart::Builder::new().build())
+        .plugin(tauri_plugin_prevent_default::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::default().build())
@@ -151,7 +152,7 @@ pub fn run() {
             close_programe,
             show_window,
             show_window_using_shortcut,
-            hide_window,
+            // hide_window,
             copy_and_ignore,
             delete_all
         ])

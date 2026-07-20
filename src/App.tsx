@@ -15,7 +15,7 @@ import { symbolEmoticonArray } from "./EmojiData/SymbolsAndASCII";
 //shortcut
 
 function App() {
-  const [ActiveTab, SetActiveTab] = useState<TabItem>({ label: "copy" });
+  const [ActiveTab, SetActiveTab] = useState<TabItem>({ label: "Copy" });
 
   useEffect(() => {
     import("./components/tabs/EmojiPicker");
@@ -28,12 +28,12 @@ function App() {
       <Nav ActiveTab={ActiveTab} SetActiveTab={SetActiveTab} />
       <strong className="flex justify-center">{ActiveTab.label}</strong>
       <div className="content overflow-y-scroll h-84 scroll-smooth mx-1 rounded-2xl">
-        {ActiveTab.label === "copy" && <Copy />}
-        {ActiveTab.label === "emoji" && (
-          <EmojiPicker title={ActiveTab.label} emotes={graphicEmojiArray} />
-        )}
-        {ActiveTab.label === "symbols" && (
+        {ActiveTab.label === "Copy" && <Copy />}
+        {ActiveTab.label === "Symbols" && (
           <EmojiPicker title={ActiveTab.label} emotes={symbolEmoticonArray} />
+        )}
+        {ActiveTab.label === "Emoji" && (
+          <EmojiPicker title={ActiveTab.label} emotes={graphicEmojiArray} />
         )}
         {ActiveTab.label === "Settings" && <Settings />}
       </div>

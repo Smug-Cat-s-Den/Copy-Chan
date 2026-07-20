@@ -54,7 +54,7 @@ const EmojiPicker = ({ emotes, title }: props) => {
                 } grid-rows-1 gap-2`}
               >
                 {items.map((i, index) => (
-                  <EmojiItem i={i} index={index} sections={sections} key={i.label} />
+                  <EmojiItem i={i} index={index} sections={sections} key={index} />
                 ))}
               </div>
             </div>
