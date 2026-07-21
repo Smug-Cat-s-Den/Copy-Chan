@@ -73,19 +73,16 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
         }
         default: {
           setKeyBind((prev) => {
-            // Prevent adding more than 3 keys
-            if (prev.length >= 3) return prev;
-
-            // Prevent duplicate continuous triggers of the exact same key
             let last = prev[prev.length - 1];
-            if (last === Pressed) return prev;
-
-            // Form the new potential key combination array
+            if (prev.length > 2) {
+              return [];
+            }
+            if (last === Pressed || Pressed === "Escape") {
+              return prev;
+            }
             const nextKeys = [...prev, Pressed.length === 1 ? Pressed.toUpperCase() : Pressed];
-
-            // Validate the *new* combination array
-            const valid = ValidateKeybinds(nextKeys);
-            setValid(valid);
+            setValid(ValidateKeybinds(nextKeys));
+            //
             return nextKeys;
           });
           break;
@@ -114,7 +111,6 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
         SetNewKeyBind(prev);
         return prev;
       });
-      setValid(true);
     };
   }, [StartRecord]);
 
