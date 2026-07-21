@@ -8,14 +8,14 @@ export async function setupTray() {
     items: [
       {
         id: "show_app",
-        text: "show app",
+        text: "Show app",
         action: async () => {
           await invoke("show_window");
         },
       },
       {
         id: "quit",
-        text: "quit App",
+        text: "Quit app",
         action: async () => {
           await invoke("close_programe");
         },

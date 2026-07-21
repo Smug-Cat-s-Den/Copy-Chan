@@ -37,8 +37,3 @@ pub fn window_pos(app: AppHandle, is_shortcut: bool) {
         let _ = main_window.set_focus();
     }
 }
-
-pub fn on_focusloss(app: &mut tauri::AppHandle) {
-    let app_window = app.get_webview_window("main").unwrap();
-    
-}

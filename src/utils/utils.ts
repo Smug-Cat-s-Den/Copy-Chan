@@ -25,3 +25,4 @@ export function ParseAndGroupEmoji(item: Emojies[]) {
 }
 
 export const store = await Store.load("config.json", { autoSave: false });
+
