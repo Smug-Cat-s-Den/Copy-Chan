@@ -25,9 +25,8 @@ pub fn get_global_history_mutex() -> MutexGuard<'static, Vec<CopyRecord>> {
 }
 
 /*
- *
  Main command functions
- Defined functions that must be invoked from the Frontend client
+ functions that must be invoked from the Frontend client
 */
 
 #[tauri::command]

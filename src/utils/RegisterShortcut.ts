@@ -7,11 +7,12 @@ import {
   unregisterAll,
 } from "@tauri-apps/plugin-global-shortcut";
 import { store } from "./utils";
+import { keybinds } from "./Keybinds";
 
 /*
 Default shortcuts
 */
-let QuickAccesShortcut: string = "Ctrl+Alt+S";
+export let QuickAccesShortcut: string = keybinds.QuickAccess.key;
 
 /*
   Hide the app
@@ -27,17 +28,18 @@ const HideShortcut = () => {
 /*
   Quick Access
 */
-const QuickAcces = async (_NewShortCut?: string) => {
+export const QuickAcces = async (_NewShortCut?: string) => {
   try {
-    const FetchShortcut: string | undefined = await store.get("QuickAcces");
-    console.log(FetchShortcut); //debug
-    if (FetchShortcut) {
-      QuickAccesShortcut = FetchShortcut;
-    }
     if (_NewShortCut) {
+      // console.log(_NewShortCut);
       await unregister(QuickAccesShortcut);
       QuickAccesShortcut = _NewShortCut;
     }
+    const FetchShortCut: string | undefined = await store.get(keybinds.QuickAccess.id);
+    if (FetchShortCut) {
+      QuickAccesShortcut = FetchShortCut;
+    }
+    console.log(QuickAccesShortcut);
     await register(QuickAccesShortcut, async (e: ShortcutEvent) => {
       if (e.state == "Pressed") {
         await invoke("show_window_using_shortcut");

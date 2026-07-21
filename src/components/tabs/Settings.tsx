@@ -7,15 +7,18 @@ import { BsYoutube } from "react-icons/bs";
 // import { IoWarningSharp } from "react-icons/io5";
 import RecordKeyBind from "../RecordKeyBind";
 import Warning from "../settings/Warning";
+import { QuickAcces, QuickAccesShortcut } from "../../utils/RegisterShortcut";
+import { keybinds } from "../../utils/Keybinds";
 
 const AppVersion = await getVersion();
-const gh = "https://github.com/aditya-wuw/Copy-Chan";
-const yt = "https://www.youtube.com/@NullTeams";
+const gh = "https://github.com/Smug-Cat-s-Den/Copy-Chan";
+const yt = "https://www.youtube.com/@smug_cats_den";
 
 const Settings = () => {
   const [isStartUpEnabled, SetStartUp] = useState<boolean>(true);
+  const [PersistOnDive, SetPersistOnDive] = useState<boolean>(false);
+
   const StartUpCheck = useCallback(async () => {
-    console.log(await isEnabled());
     let isStartUpEnabled = await isEnabled();
     SetStartUp(isStartUpEnabled);
   }, [isEnabled]);
@@ -43,7 +46,11 @@ const Settings = () => {
       <section className="mt-3 bg-blue-600/20 p-3 rounded-md ">
         <div className="flex justify-between  items-center">
           <h1>Quick access CopyChan</h1>
-          <RecordKeyBind />
+          <RecordKeyBind
+            Id={keybinds.QuickAccess.id}
+            DefaultKeyBind={QuickAccesShortcut}
+            Update={QuickAcces}
+          />
         </div>
         <div className="text-[13px] mt-2 text-gray-300">
           Quickly open up the application, hide using "Escape" key
@@ -62,7 +69,7 @@ const Settings = () => {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm">Persist clipbord on drive</span>
-          <SliderButton value={isStartUpEnabled} SetValue={SetStartUp} />
+          <SliderButton value={PersistOnDive} SetValue={SetPersistOnDive} />
         </div>
       </section>
       <footer>

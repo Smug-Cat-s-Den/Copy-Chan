@@ -42,7 +42,7 @@ const Copy = () => {
   const handleClearAll = async () => {
     const confirmed = await ask("Are you sure you want to clear everything?", {
       title: "",
-      cancelLabel: "no thank u :3",
+      cancelLabel: "no",
       kind: "warning",
     });
 

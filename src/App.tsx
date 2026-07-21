@@ -12,11 +12,9 @@ import EmojiPicker from "./components/tabs/EmojiPicker";
 import { graphicEmojiArray } from "./EmojiData/Visual";
 import { symbolEmoticonArray } from "./EmojiData/SymbolsAndASCII";
 
-//shortcut
 
 function App() {
   const [ActiveTab, SetActiveTab] = useState<TabItem>({ label: "Copy" });
-
   useEffect(() => {
     setupTray();
     RegisterShortCuts();
