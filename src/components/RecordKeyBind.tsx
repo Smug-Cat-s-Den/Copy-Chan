@@ -11,20 +11,30 @@ interface props {
   Update: (k: string) => Promise<void>;
 }
 
+let OneTime: boolean = true;
 export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
   const [StartRecord, SetRecordStatus] = useState<boolean>(false);
-  const [KeyBind, setKeyBind] = useState<string[]>(DefaultKeyBind.split("+"));
+  const [KeyBind, setKeyBind] = useState<string[]>(() =>
+    DefaultKeyBind ? DefaultKeyBind.trim().split("+") : [],
+  );
   const [isValid, setValid] = useState<boolean>(true);
 
   useEffect(() => {
     /**
      * Set the Display keybind
      */
+    if (OneTime) {
+      setKeyBind(DefaultKeyBind.trim().split("+"));
+      OneTime = false;
+      //this default is used to initialize the KeyBind state with the stored keybind fetched from RegisterShortcut.ts
+    }
     setKeyBind((prev) => {
       if (StartRecord) {
         unregisterAll(); //disable all keybinds
         return [];
       }
+      RegisterShortCuts();
+      console.log(prev);
       return prev;
     });
 
@@ -37,7 +47,6 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
       const Keybind = k.join("+").trim();
       await store.set(Id, Keybind); // store it locally
       Update(Keybind); // update the keybind;
-      RegisterShortCuts();
     };
 
     const KeyListner = (e: KeyboardEvent) => {
@@ -65,10 +74,12 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
         default: {
           setKeyBind((prev) => {
             let last = prev[prev.length - 1];
-            console.log(KeyBind);
             if (prev.length > 2) {
               return [];
             }
+            console.log(KeyBind[0]);
+            console.log(KeyBind[1]);
+            console.log(KeyBind[2]);
             if (last === Pressed || Pressed === "Escape") {
               return prev;
             }
@@ -84,7 +95,7 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
     return () => {
       window.removeEventListener("keydown", KeyListner);
       setKeyBind((prev) => {
-        if (prev.length === 0) return DefaultKeyBind.split("+"); //set the default values
+        if (prev.length === 0) return KeyBind; //set the default values
         SetNewKeyBind(prev);
         return prev;
       });
