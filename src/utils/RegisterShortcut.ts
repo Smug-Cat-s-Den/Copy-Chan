@@ -31,7 +31,6 @@ const HideShortcut = () => {
 export const QuickAcces = async (_NewShortCut?: string) => {
   try {
     if (_NewShortCut) {
-      // console.log(_NewShortCut);
       await unregister(QuickAccesShortcut);
       QuickAccesShortcut = _NewShortCut;
     }

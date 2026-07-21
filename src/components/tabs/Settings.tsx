@@ -1,35 +1,62 @@
 import { disable, enable, isEnabled } from "@tauri-apps/plugin-autostart";
 import { useCallback, useEffect, useState } from "react";
 import { SliderButton } from "../SliderButton";
-import { GrGithub } from "react-icons/gr";
-import { getVersion } from "@tauri-apps/api/app";
-import { BsYoutube } from "react-icons/bs";
-// import { IoWarningSharp } from "react-icons/io5";
 import RecordKeyBind from "../RecordKeyBind";
 import Warning from "../settings/Warning";
 import { QuickAcces, QuickAccesShortcut } from "../../utils/RegisterShortcut";
 import { keybinds } from "../../utils/Keybinds";
-
-const AppVersion = await getVersion();
-const gh = "https://github.com/Smug-Cat-s-Den/Copy-Chan";
-const yt = "https://www.youtube.com/@smug_cats_den";
+import { invoke } from "@tauri-apps/api/core";
+import { store } from "../../utils/utils";
+import Footer from "../Footer";
 
 const Settings = () => {
   const [isStartUpEnabled, SetStartUp] = useState<boolean>(true);
-  const [PersistOnDive, SetPersistOnDive] = useState<boolean>(false);
+  const [DefaultMaxEntires, SetDefaultMaxEntires] = useState<number>();
+  const [isValidEntry, setisValidEntry] = useState<boolean>(true);
 
+
+  /*
+    Startup check
+  */
   const StartUpCheck = useCallback(async () => {
     let isStartUpEnabled = await isEnabled();
     SetStartUp(isStartUpEnabled);
   }, [isEnabled]);
+
+  /*
+    Function to update the maximum number of entries user can add
+  */
+  const HandleMaxEntries = async (e: EventTarget & HTMLInputElement) => {
+    let Val:number = Number(e.value);
+    if (!isValidEntry) {
+      e.value = String(DefaultMaxEntires)
+      setisValidEntry(true);
+      return;
+    };
+    SetDefaultMaxEntires(Val);
+    store.set("MaxEntries", Val)
+    await invoke("update_max_entries_on_memory", { newValue: Val });
+  };
+
+
+  const FetchFromConfig = async () => {
+    /* Max Entries */
+    let enties: number | undefined = await store.get("MaxEntries")
+    console.log(enties);
+    SetDefaultMaxEntires(enties ?? 20);
+  }
 
   const HandleStartUp = () => {
     isStartUpEnabled ? disable() : enable();
     StartUpCheck();
   };
 
+  /**
+   * Settings entry point
+   */
   useEffect(() => {
     StartUpCheck();
+    FetchFromConfig();
   }, []);
 
   return (
@@ -58,37 +85,32 @@ const Settings = () => {
         </div>
       </section>
       <section className="mt-3 bg-blue-600/20 p-3 rounded-md ">
-        <h1>Others</h1>
         <div className="flex justify-between  items-center">
-          <span className="text-sm">Max Clipboard entries</span>
+          <span className="">Max Clipboard entries (Max 100)</span>
           <div
-            className={`p-2 bg-linear-to-r from-blue-600  via-blue-600/90 transition duration-300 ease-in-out to-blue-600 text-white my-2 rounded-md text-sm`}
+            className={`p-2 ${isValidEntry ? "bg-linear-to-r from-blue-600  via-blue-600/90 to-blue-600" : "bg-red-500"}  transition duration-300 ease-in-out  text-white my-2 rounded-md text-sm`}
           >
-            <input placeholder="20" className="w-10 text-center" />
+            <input
+              type="number"
+              placeholder="20"
+              className="w-10 text-center outline-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none
+                  [&::-webkit-outer-spin-button]:appearance-none"
+              defaultValue={DefaultMaxEntires}
+              onChange={(e) => {
+                let v = Number(e.target.value);
+                setisValidEntry(v > 4 && v <= 100 && v != 0);
+              }}
+              onBlur={(e) => HandleMaxEntries(e.currentTarget)}
+            />
           </div>
         </div>
-        <div className="flex justify-between items-center">
-          <span className="text-sm">Persist clipbord on drive</span>
-          <SliderButton value={PersistOnDive} SetValue={SetPersistOnDive} />
-        </div>
+        <p className="text-[13px] mt-3  text-gray-300">
+          Edit the maximum number of entries to record
+        </p>
       </section>
-      <footer>
-        <section className="select-none flex gap-2 items-end">
-          <img src={"/Copychan.png"} alt="copychan" draggable="false" width={100} />
-          <div className="pb-3">
-            <h1 className="text-[13px] dark:text-gray-300 text-gray-700">build {AppVersion}</h1>
-            <h1>Support me</h1>
-            <span className="flex gap-2">
-              <a href={gh} target="_blank">
-                <GrGithub size={20} className="hover:text-blue-300" />
-              </a>
-              <a href={yt} target="_blank">
-                <BsYoutube size={20} className="hover:text-red-500" />
-              </a>
-            </span>
-          </div>
-        </section>
-      </footer>
+      <section className="mt-3 bg-blue-600/20 p-3 rounded-md ">
+       <Footer/>
+      </section>
     </main>
   );
 };

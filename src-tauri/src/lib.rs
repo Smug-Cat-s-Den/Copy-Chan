@@ -27,9 +27,14 @@ pub struct ClipBoardState {
     pub ignore_next: AtomicBool,
 }
 
-//global states
-static COPY_PATH: OnceCell<PathBuf> = OnceCell::new();
+/*
+ * In memory Clipbord data
+ */
 static COPY_HISTROY: OnceLock<Mutex<Vec<CopyRecord>>> = OnceLock::new();
+
+/*
+ * Max entries
+ */
 static MAX_ENTRIES: OnceLock<Mutex<usize>> = OnceLock::new();
 
 fn get_max_entries_mutex() -> MutexGuard<'static, usize> {
@@ -37,13 +42,22 @@ fn get_max_entries_mutex() -> MutexGuard<'static, usize> {
     return mutex.lock().unwrap();
 }
 
-// init a global Vec<CopyRecords> using OnceCell
+#[tauri::command]
+fn update_max_entries_on_memory(new_value: usize) {
+    let mut max_entries_mutex = get_max_entries_mutex();
+    *max_entries_mutex = new_value;
+}
+
+/*
+ * Data Directory initialization
+ */
+static COPY_PATH: OnceCell<PathBuf> = OnceCell::new();
+
 fn set_global_data_path(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let mut path = app.path().app_config_dir()?;
     path.push("copyhistory");
     std::fs::create_dir_all(&path)?;
     path.push("data.bin");
-    // println!("{}", path.display());
     COPY_PATH.set(path).expect("Path already set");
     Ok(())
 }
@@ -117,7 +131,8 @@ pub fn run() {
             show_window,
             show_window_using_shortcut,
             copy_and_ignore,
-            delete_all
+            delete_all,
+            update_max_entries_on_memory
         ])
         .build(tauri::generate_context!())
         .expect("error while building app")
