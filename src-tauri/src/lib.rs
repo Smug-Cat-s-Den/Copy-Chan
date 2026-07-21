@@ -1,6 +1,8 @@
 pub mod copy;
 pub mod core;
 
+use crate::core::config::setup_config;
+use crate::window_pos::window_pos;
 use crate::{
     copy::{
         cblisten::{cblisten, copy_and_ignore},
@@ -9,32 +11,53 @@ use crate::{
             pin_history, CopyRecord,
         },
     },
-    core::load_and_save::load_history,
+    core::{load_and_save::load_history, window_pos},
 };
-use mouse_position::mouse_position::Mouse;
+use std::sync::MutexGuard;
+
 use once_cell::sync::OnceCell;
 use std::{
     path::PathBuf,
     sync::{atomic::AtomicBool, Mutex, OnceLock},
     thread,
 };
-use tauri::{AppHandle, Manager, PhysicalPosition};
+use tauri::{AppHandle, Manager};
 
 pub struct ClipBoardState {
     pub ignore_next: AtomicBool,
 }
 
-//global states
-static COPY_PATH: OnceCell<PathBuf> = OnceCell::new();
+/*
+ * In memory Clipbord data
+ */
 static COPY_HISTROY: OnceLock<Mutex<Vec<CopyRecord>>> = OnceLock::new();
 
-// init a global Vec<CopyRecords> using OnceCell
+/*
+ * Max entries
+ */
+static MAX_ENTRIES: OnceLock<Mutex<usize>> = OnceLock::new();
+
+fn get_max_entries_mutex() -> MutexGuard<'static, usize> {
+    let mutex = MAX_ENTRIES.get_or_init(|| Mutex::new(10));
+    return mutex.lock().unwrap();
+}
+
+#[tauri::command]
+fn update_max_entries_on_memory(new_value: usize) {
+    let mut max_entries_mutex = get_max_entries_mutex();
+    *max_entries_mutex = new_value;
+}
+
+/*
+ * Data Directory initialization
+ */
+static COPY_PATH: OnceCell<PathBuf> = OnceCell::new();
+
 fn set_global_data_path(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let mut path = app.path().app_config_dir()?;
     path.push("copyhistory");
     std::fs::create_dir_all(&path)?;
     path.push("data.bin");
-    // println!("{}", path.display());
     COPY_PATH.set(path).expect("Path already set");
     Ok(())
 }
@@ -46,16 +69,6 @@ fn listen_to_clipbord(app: &mut tauri::App) {
         cblisten(handle);
     });
 }
-
-// #[tauri::command]
-// fn hide_window(app: AppHandle) {
-//     // println!("hiding the window");
-//     if let Some(main_window) = app.get_webview_window("main") {
-//         main_window.hide().unwrap();
-//     } else {
-//         println!("No window labeled 'main' found");
-//     }
-// }
 
 #[tauri::command]
 fn close_programe(app_handle: AppHandle) {
@@ -75,47 +88,11 @@ fn show_window_using_shortcut(app: tauri::AppHandle) {
     println!("window will show");
 }
 
-// Window position calculation
-fn window_pos(app: AppHandle, is_shortcut: bool) {
-    if let Some(main_window) = app.get_webview_window("main") {
-        let pos = Mouse::get_mouse_position();
-        match pos {
-            Mouse::Position { x, y } => {
-                if is_shortcut {
-                    let _ = main_window.set_position(PhysicalPosition::new(x, y));
-                } else {
-                    let monitors = main_window.available_monitors().unwrap_or_default();
-                    let target_monitor = monitors.into_iter().find(|m| {
-                        let m_pos = m.position();
-                        let m_size = m.size();
-                        x >= m_pos.x
-                            && x <= (m_pos.x + m_size.width as i32)
-                            && y >= m_pos.y
-                            && y <= (m_pos.y + m_size.height as i32)
-                    });
-
-                    if let Some(monitor) = target_monitor {
-                        let m_pos = monitor.position();
-                        let m_size = monitor.size();
-                        let new_x = m_pos.x + (m_size.width as f64 * 0.72) as i32;
-                        let _ =
-                            main_window.set_position(PhysicalPosition::new(new_x, m_pos.y + 10));
-                    }
-                }
-            }
-            _ => eprintln!("Could not get mouse position"),
-        }
-
-        let _ = main_window.set_visible_on_all_workspaces(true);
-        let _ = main_window.show();
-        let _ = main_window.set_focus();
-    }
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     std::env::set_var("GDK_BACKEND", "x11");
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
         .manage(ClipBoardState {
             ignore_next: AtomicBool::new(false),
         })
@@ -126,6 +103,7 @@ pub fn run() {
                 .set_focus();
         }))
         .plugin(tauri_plugin_autostart::Builder::new().build())
+        .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_prevent_default::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -138,9 +116,9 @@ pub fn run() {
                     eprintln!("error setting up global path : {}", e)
                 }
             };
-            listen_to_clipbord(app_handle);
-            // here decrypt the encrypted data from drive and store to global Vec<CopyRecords>
             load_history().map_err(|e| e.to_string())?;
+            listen_to_clipbord(app_handle);
+            setup_config(app_handle)?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -152,9 +130,9 @@ pub fn run() {
             close_programe,
             show_window,
             show_window_using_shortcut,
-            // hide_window,
             copy_and_ignore,
-            delete_all
+            delete_all,
+            update_max_entries_on_memory
         ])
         .build(tauri::generate_context!())
         .expect("error while building app")
@@ -162,5 +140,4 @@ pub fn run() {
             tauri::RunEvent::Exit => {}
             _ => {}
         })
-    // .expect("error while running tauri application");
 }

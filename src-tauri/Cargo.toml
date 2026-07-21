@@ -41,6 +41,7 @@ hex = "0.4.3"
 rand = "0.10.2"
 aes-gcm = "0.11.0"
 tauri-plugin-prevent-default = "5"
+tauri-plugin-store = "2"
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.

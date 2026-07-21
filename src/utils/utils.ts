@@ -2,6 +2,8 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { Emojies, GroupedEmojies } from "../types/app.types";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { invoke } from "@tauri-apps/api/core";
+import { Store } from "@tauri-apps/plugin-store";
+
 export const appWindow = getCurrentWindow();
 export const currentWindow = WebviewWindow.getCurrent();
 
@@ -21,3 +23,6 @@ export function ParseAndGroupEmoji(item: Emojies[]) {
     return acc;
   }, {} as GroupedEmojies);
 }
+
+export const store = await Store.load("config.json", { autoSave: false });
+

@@ -1,21 +1,39 @@
 import { useEffect, useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import { MdDone } from "react-icons/md";
+import { store } from "../utils/utils";
+import { RegisterShortCuts } from "../utils/RegisterShortcut";
+import { unregisterAll } from "@tauri-apps/plugin-global-shortcut";
 
-const DefaultKeyBing = "Ctrl+Alt+S"; //added for testing
-export default function RecordKeyBind() {
+interface props {
+  Id: string;
+  DefaultKeyBind: string;
+  Update: (k: string) => Promise<void>;
+}
+
+export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
   const [StartRecord, SetRecordStatus] = useState<boolean>(false);
-  const [KeyBind, setKeyBind] = useState<string[]>(DefaultKeyBing.split("+"));
+  const [KeyBind, setKeyBind] = useState<string[]>(DefaultKeyBind.split("+"));
 
   useEffect(() => {
     if (!StartRecord) return;
-
-    const SetNewKeyBind = (k: string[]) => {
-      console.log("Final Key bind to set", k.join("+"));
+    unregisterAll();
+    const SetNewKeyBind = async (k: string[]) => {
+      const Keybind = k.join("+").trim();
+      await store.set(Id, Keybind);
+      Update(Keybind);
+      RegisterShortCuts();
     };
 
     const KeyListner = (e: KeyboardEvent) => {
-      let Pressed = e.key === "Control" ? "Ctrl" : e.key;
+      e.preventDefault();
+      e.stopPropagation();
+      let Pressed =
+        e.key === "Control"
+          ? "Ctrl"
+          : e.key === "Meta"
+            ? ""
+            : e.code.replace(/Key|Left|Right|Digit|Numpad/g, "");
 
       switch (Pressed) {
         case "Escape": {
@@ -40,10 +58,10 @@ export default function RecordKeyBind() {
             if (prev.length > 2) {
               return [];
             }
-            if (last === Pressed || Pressed === "Escape") {
+            if (last === Pressed || Pressed === "Escape" || Pressed.length === 0) {
               return prev;
             }
-            return [...prev, Pressed];
+            return [...prev, Pressed.length === 1 ? Pressed.toUpperCase() : Pressed];
           });
           break;
         }
@@ -55,7 +73,7 @@ export default function RecordKeyBind() {
     return () => {
       window.removeEventListener("keydown", KeyListner);
       setKeyBind((prev) => {
-        if (prev.length === 0) return DefaultKeyBing.split("+"); //set the default values
+        if (prev.length === 0) return DefaultKeyBind.split("+"); //set the default values
         SetNewKeyBind(prev);
         return prev;
       });

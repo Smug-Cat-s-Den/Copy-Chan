@@ -21,6 +21,8 @@
     "core:app:allow-default-window-icon",
     "core:window:allow-start-dragging",
     "core:window:allow-hide",
+    "store:default",
+    "core:window:allow-is-focused",
     "autostart:allow-enable",
     "autostart:allow-disable",
     "autostart:allow-is-enabled"

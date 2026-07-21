@@ -5,22 +5,54 @@ import { TabItem } from "./types/app.types";
 import Nav from "./components/nav/Nav";
 import { setupTray } from "./utils/systemtray";
 import Settings from "./components/tabs/Settings";
-import { register_shortcut } from "./utils/RegisterShortcut";
+import { RegisterShortCuts } from "./utils/RegisterShortcut";
 import EmojiPicker from "./components/tabs/EmojiPicker";
+import { appWindow } from "./utils/utils";
 
-// Emojis Array
+//Emoji datasets
 import { graphicEmojiArray } from "./EmojiData/Visual";
 import { symbolEmoticonArray } from "./EmojiData/SymbolsAndASCII";
 
-//shortcut
-
 function App() {
   const [ActiveTab, SetActiveTab] = useState<TabItem>({ label: "Copy" });
-
+  /**
+   * Initial Setup
+   */
   useEffect(() => {
-    import("./components/tabs/EmojiPicker");
     setupTray();
-    register_shortcut();
+    RegisterShortCuts();
+  }, []);
+
+  /**
+   * Auto Hide on focus loss
+   */
+  useEffect(() => {
+    let unlisten: (() => void) | undefined;
+    let FocusTimeout: NodeJS.Timeout | null = null;
+    const setupListener = async () => {
+      unlisten = await appWindow.onFocusChanged(async ({ payload: focused }) => {
+        if (FocusTimeout) {
+          clearTimeout(FocusTimeout);
+          FocusTimeout = null;
+        }
+
+        if (!focused) {
+          FocusTimeout = setTimeout(async () => {
+            await appWindow.hide();
+          }, 50);
+        }
+      });
+    };
+    setupListener();
+
+    return () => {
+      if (unlisten) {
+        unlisten();
+        if (FocusTimeout) {
+          clearTimeout(FocusTimeout);
+        }
+      }
+    };
   }, []);
 
   return (
