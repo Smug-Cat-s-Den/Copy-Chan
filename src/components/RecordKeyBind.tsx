@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import { MdDone } from "react-icons/md";
-import { FormatKeys, store } from "../utils/utils";
+import { FormatKeys, store, ValidateKeybinds } from "../utils/utils";
 import { RegisterShortCuts } from "../utils/RegisterShortcut";
 import { unregisterAll } from "@tauri-apps/plugin-global-shortcut";
 
@@ -13,6 +13,7 @@ interface props {
 
 let OneTime: boolean = true;
 export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
+  const ButtonRef = useRef<HTMLButtonElement>(null);
   const [StartRecord, SetRecordStatus] = useState<boolean>(false);
   const [KeyBind, setKeyBind] = useState<string[]>(() =>
     DefaultKeyBind ? DefaultKeyBind.trim().split("+") : [],
@@ -39,7 +40,6 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
     });
 
     if (!StartRecord) return;
-    // unregisterAll();
     /**
       Update the keybind
     */
@@ -73,37 +73,54 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
         }
         default: {
           setKeyBind((prev) => {
+            // Prevent adding more than 3 keys
+            if (prev.length >= 3) return prev;
+
+            // Prevent duplicate continuous triggers of the exact same key
             let last = prev[prev.length - 1];
-            if (prev.length > 2) {
-              return [];
-            }
-            console.log(KeyBind[0]);
-            console.log(KeyBind[1]);
-            console.log(KeyBind[2]);
-            if (last === Pressed || Pressed === "Escape") {
-              return prev;
-            }
-            return [...prev, Pressed.length === 1 ? Pressed.toUpperCase() : Pressed];
+            if (last === Pressed) return prev;
+
+            // Form the new potential key combination array
+            const nextKeys = [...prev, Pressed.length === 1 ? Pressed.toUpperCase() : Pressed];
+
+            // Validate the *new* combination array
+            const valid = ValidateKeybinds(nextKeys);
+            setValid(valid);
+            return nextKeys;
           });
           break;
         }
       }
     };
+    /*
+      On clicking outside or focus loss
+    */
+    const HandleFocusLoss = (event: MouseEvent) => {
+      if (ButtonRef.current && !ButtonRef.current.contains(event.target as Node)) {
+        setKeyBind(KeyBind);
+        SetRecordStatus(false);
+        setValid(true);
+      }
+    };
 
     window.addEventListener("keydown", KeyListner);
+    window.addEventListener("mousedown", HandleFocusLoss);
 
     return () => {
       window.removeEventListener("keydown", KeyListner);
+      window.removeEventListener("mousedown", HandleFocusLoss);
       setKeyBind((prev) => {
-        if (prev.length === 0) return KeyBind; //set the default values
+        if (prev.length === 0) return KeyBind; //Reset values
         SetNewKeyBind(prev);
         return prev;
       });
+      setValid(true);
     };
   }, [StartRecord]);
 
   return (
     <button
+      ref={ButtonRef}
       className={`p-2 ${isValid ? "bg-linear-to-r" : "bg-red-500/80"}  from-blue-600  ${StartRecord ? "via-blue-600/90" : "via-blue-600/30"} transition duration-300 ease-in-out to-blue-600 text-white my-2 rounded-md text-sm`}
     >
       <div className="flex items-center justify-between">

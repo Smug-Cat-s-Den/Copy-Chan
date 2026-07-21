@@ -32,3 +32,15 @@ export const FormatKeys = (K: KeyboardEvent): string => {
       ? ""
       : K.code.replace(/Key|Left|Right|Digit|Numpad/g, "");
 };
+
+export const ValidateKeybinds = (Keybind: string[]): boolean => {
+  // if (Keybind.length !== 1) return false;
+  console.log(Keybind);
+  const [k1, k2, k3] = Keybind;
+  const BannedKeybinds = ["tab", "capslock", "escape", "enter"];
+  if (k1 === k2 || k2 === k3 || k3 === k1) return false;
+  let HasBannedKeyfound = Keybind.some((k) => BannedKeybinds.includes(k.toLowerCase()));
+  console.log("found banned key", HasBannedKeyfound);
+  if (HasBannedKeyfound) return false;
+  return true;
+};
