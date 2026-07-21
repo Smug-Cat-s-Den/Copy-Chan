@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import { MdDone } from "react-icons/md";
-import { store } from "../utils/utils";
+import { FormatKeys, store } from "../utils/utils";
 import { RegisterShortCuts } from "../utils/RegisterShortcut";
 import { unregisterAll } from "@tauri-apps/plugin-global-shortcut";
 
@@ -14,26 +14,36 @@ interface props {
 export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
   const [StartRecord, SetRecordStatus] = useState<boolean>(false);
   const [KeyBind, setKeyBind] = useState<string[]>(DefaultKeyBind.split("+"));
+  const [isValid, setValid] = useState<boolean>(true);
 
   useEffect(() => {
+    /**
+     * Set the Display keybind
+     */
+    setKeyBind((prev) => {
+      if (StartRecord) {
+        unregisterAll(); //disable all keybinds
+        return [];
+      }
+      return prev;
+    });
+
     if (!StartRecord) return;
-    unregisterAll();
+    // unregisterAll();
+    /**
+      Update the keybind
+    */
     const SetNewKeyBind = async (k: string[]) => {
       const Keybind = k.join("+").trim();
-      await store.set(Id, Keybind);
-      Update(Keybind);
+      await store.set(Id, Keybind); // store it locally
+      Update(Keybind); // update the keybind;
       RegisterShortCuts();
     };
 
     const KeyListner = (e: KeyboardEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      let Pressed =
-        e.key === "Control"
-          ? "Ctrl"
-          : e.key === "Meta"
-            ? ""
-            : e.code.replace(/Key|Left|Right|Digit|Numpad/g, "");
+      let Pressed = FormatKeys(e);
 
       switch (Pressed) {
         case "Escape": {
@@ -55,10 +65,11 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
         default: {
           setKeyBind((prev) => {
             let last = prev[prev.length - 1];
+            console.log(KeyBind);
             if (prev.length > 2) {
               return [];
             }
-            if (last === Pressed || Pressed === "Escape" || Pressed.length === 0) {
+            if (last === Pressed || Pressed === "Escape") {
               return prev;
             }
             return [...prev, Pressed.length === 1 ? Pressed.toUpperCase() : Pressed];
@@ -81,8 +92,8 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
   }, [StartRecord]);
 
   return (
-    <div
-      className={`p-2 bg-linear-to-r from-blue-600  ${StartRecord ? "via-blue-600/90" : "via-blue-600/30"} transition duration-300 ease-in-out to-blue-600 text-white my-2 rounded-md text-sm`}
+    <button
+      className={`p-2 ${isValid ? "bg-linear-to-r" : "bg-red-500/80"}  from-blue-600  ${StartRecord ? "via-blue-600/90" : "via-blue-600/30"} transition duration-300 ease-in-out to-blue-600 text-white my-2 rounded-md text-sm`}
     >
       <div className="flex items-center justify-between">
         <div className="w-30 overflow-hidden">
@@ -94,20 +105,16 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
         </div>
         <span
           onClick={() => {
-            setKeyBind((prev) => {
-              if (StartRecord === false) return [];
-              return prev;
-            });
             SetRecordStatus(!StartRecord);
           }}
         >
           {StartRecord ? (
-            <MdDone className="bg-blue-700 p-1 animate-fade-up rounded-sm" size={15} />
+            <MdDone className="bg-blue-700 p-1 animate-fade-up rounded-sm" size={18} />
           ) : (
-            <BiEditAlt className="animate-fade-up" size={15} />
+            <BiEditAlt className="animate-fade-up" size={18} />
           )}
         </span>
       </div>
-    </div>
+    </button>
   );
 }

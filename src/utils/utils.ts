@@ -6,6 +6,7 @@ import { Store } from "@tauri-apps/plugin-store";
 
 export const appWindow = getCurrentWindow();
 export const currentWindow = WebviewWindow.getCurrent();
+export const store = await Store.load("config.json", { autoSave: false });
 
 export async function HandleCopy(item: string) {
   if (!item) return;
@@ -24,5 +25,10 @@ export function ParseAndGroupEmoji(item: Emojies[]) {
   }, {} as GroupedEmojies);
 }
 
-export const store = await Store.load("config.json", { autoSave: false });
-
+export const FormatKeys = (K: KeyboardEvent): string => {
+  return K.key === "Control"
+    ? "Ctrl"
+    : K.key === "Meta"
+      ? ""
+      : K.code.replace(/Key|Left|Right|Digit|Numpad/g, "");
+};
