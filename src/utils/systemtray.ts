@@ -15,7 +15,7 @@ export async function setupTray() {
       },
       {
         id: "quit",
-        text: "Quit App",
+        text: "quit App",
         action: async () => {
           await invoke("close_programe");
         },

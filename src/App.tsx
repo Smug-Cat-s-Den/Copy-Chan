@@ -5,7 +5,7 @@ import { TabItem } from "./types/app.types";
 import Nav from "./components/nav/Nav";
 import { setupTray } from "./utils/systemtray";
 import Settings from "./components/tabs/Settings";
-import { register_shortcut } from "./utils/RegisterShortcut";
+import { RegisterShortCuts } from "./utils/RegisterShortcut";
 import EmojiPicker from "./components/tabs/EmojiPicker";
 
 // Emojis Array
@@ -18,9 +18,8 @@ function App() {
   const [ActiveTab, SetActiveTab] = useState<TabItem>({ label: "Copy" });
 
   useEffect(() => {
-    import("./components/tabs/EmojiPicker");
     setupTray();
-    register_shortcut();
+    RegisterShortCuts();
   }, []);
 
   return (

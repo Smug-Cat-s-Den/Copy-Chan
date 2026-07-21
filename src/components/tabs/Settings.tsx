@@ -6,7 +6,6 @@ import { getVersion } from "@tauri-apps/api/app";
 import { BsYoutube } from "react-icons/bs";
 // import { IoWarningSharp } from "react-icons/io5";
 import RecordKeyBind from "../RecordKeyBind";
-import { IoWarningSharp } from "react-icons/io5";
 import Warning from "../settings/Warning";
 
 const AppVersion = await getVersion();
@@ -21,10 +20,10 @@ const Settings = () => {
     SetStartUp(isStartUpEnabled);
   }, [isEnabled]);
 
-  function HandleStartUp() {
+  const HandleStartUp = () => {
     isStartUpEnabled ? disable() : enable();
     StartUpCheck();
-  }
+  };
 
   useEffect(() => {
     StartUpCheck();
