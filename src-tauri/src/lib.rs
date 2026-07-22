@@ -7,7 +7,7 @@ use crate::{
     copy::{
         cblisten::{cblisten, copy_and_ignore},
         copy::{
-            copy_history_add, del_entry, delete_all, get_enties_limit_by_user, get_history,
+            copy_history_add, del_entry, delete_all, get_history,
             pin_history, CopyRecord,
         },
     },
@@ -122,7 +122,6 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            get_enties_limit_by_user,
             copy_history_add,
             del_entry,
             pin_history,

@@ -4,7 +4,6 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { HandleCopy } from "../../utils/utils";
 import Records from "../Records";
-import { VscPin } from "react-icons/vsc";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { ask } from "@tauri-apps/plugin-dialog";
 
@@ -78,10 +77,6 @@ const Copy = () => {
 
       {Pinned.length > 0 && (
         <div>
-          <h1 className="mx-3 flex gap-2 text-md">
-            <VscPin />
-            Pinned
-          </h1>
           {Pinned.map((i, index) => (
             <Records
               key={index}
@@ -91,7 +86,7 @@ const Copy = () => {
               removeHistory={removeHistory}
             />
           ))}
-          <h1 className="flex justify-center border-b border-blue-300 mx-2 pb-4" />
+          <h1 className="flex justify-center border-b border-blue-600 mx-2 pb-4" />
         </div>
       )}
       <div className="mt-5">

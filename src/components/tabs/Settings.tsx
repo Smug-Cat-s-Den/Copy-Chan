@@ -14,7 +14,6 @@ const Settings = () => {
   const [DefaultMaxEntires, SetDefaultMaxEntires] = useState<number>();
   const [isValidEntry, setisValidEntry] = useState<boolean>(true);
 
-
   /*
     Startup check
   */
@@ -27,24 +26,23 @@ const Settings = () => {
     Function to update the maximum number of entries user can add
   */
   const HandleMaxEntries = async (e: EventTarget & HTMLInputElement) => {
-    let Val:number = Number(e.value);
+    let Val: number = Number(e.value);
     if (!isValidEntry) {
-      e.value = String(DefaultMaxEntires)
+      e.value = String(DefaultMaxEntires);
       setisValidEntry(true);
       return;
-    };
+    }
     SetDefaultMaxEntires(Val);
-    store.set("MaxEntries", Val)
+    store.set("MaxEntries", Val);
     await invoke("update_max_entries_on_memory", { newValue: Val });
   };
 
-
   const FetchFromConfig = async () => {
     /* Max Entries */
-    let enties: number | undefined = await store.get("MaxEntries")
-    console.log(enties);
+    let enties: number | undefined = await store.get("MaxEntries");
+    // console.log(enties);
     SetDefaultMaxEntires(enties ?? 20);
-  }
+  };
 
   const HandleStartUp = () => {
     isStartUpEnabled ? disable() : enable();
@@ -80,21 +78,22 @@ const Settings = () => {
           />
         </div>
         <div className="text-[13px] mt-2 text-gray-300">
-          Quickly open up the application, hide using "Escape" key
+          Quickly open up the application, hide using "Escape" key. While editing your keybind, you
+          can press Backspace to delete the previously recorded key.
           <Warning />
         </div>
       </section>
       <section className="mt-3 bg-blue-600/20 p-3 rounded-md ">
         <div className="flex justify-between  items-center">
-          <span className="">Max Clipboard entries (Max 100)</span>
+          <span className="">Max Clipboard entries </span>
           <div
-            className={`p-2 ${isValidEntry ? "bg-linear-to-r from-blue-600  via-blue-600/90 to-blue-600" : "bg-red-500"}  transition duration-300 ease-in-out  text-white my-2 rounded-md text-sm`}
+            className={`p-2 outline-2 outline-blue-600/70 ${isValidEntry ? "bg-linear-to-r from-blue-600  via-blue-600/40 to-blue-600" : "bg-red-500"}  transition duration-300 ease-in-out  text-white my-2 rounded-md text-sm`}
           >
             <input
               type="number"
               placeholder="20"
               className="w-10 text-center outline-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none
-                  [&::-webkit-outer-spin-button]:appearance-none"
+                  [&::-webkit-outer-spin-button]:appearance-none "
               defaultValue={DefaultMaxEntires}
               onChange={(e) => {
                 let v = Number(e.target.value);
@@ -105,11 +104,11 @@ const Settings = () => {
           </div>
         </div>
         <p className="text-[13px] mt-3  text-gray-300">
-          Edit the maximum number of entries to record
+          Edit the maximum number of entries to record before starting to overwrite. The maximum limit is 100
         </p>
       </section>
-      <section className="mt-3 bg-blue-600/20 p-3 rounded-md ">
-       <Footer/>
+      <section className="mt-3 bg-blue-600/20 p-3 rounded-md">
+        <Footer />
       </section>
     </main>
   );

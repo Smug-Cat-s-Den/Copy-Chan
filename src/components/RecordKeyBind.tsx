@@ -35,7 +35,7 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
         return [];
       }
       RegisterShortCuts();
-      console.log(prev);
+      // console.log(prev);
       return prev;
     });
 
@@ -117,7 +117,7 @@ export default function RecordKeyBind({ Id, DefaultKeyBind, Update }: props) {
   return (
     <button
       ref={ButtonRef}
-      className={`p-2 ${isValid ? "bg-linear-to-r" : "bg-red-500/80"}  from-blue-600  ${StartRecord ? "via-blue-600/90" : "via-blue-600/30"} transition duration-300 ease-in-out to-blue-600 text-white my-2 rounded-md text-sm`}
+      className={`p-2 outline-2 outline-blue-600/70 ${isValid ? "bg-linear-to-r" : "bg-red-500/80"}  from-blue-600  ${StartRecord ? "via-blue-600/90" : "via-blue-600/30"} transition duration-300 ease-in-out to-blue-600 text-white my-2 rounded-md text-sm`}
     >
       <div className="flex items-center justify-between">
         <div className="w-30 overflow-hidden">

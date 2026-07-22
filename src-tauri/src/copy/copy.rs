@@ -1,7 +1,6 @@
-use crate::{core::load_and_save::save_history};
+use crate::core::load_and_save::save_history;
 use crate::{get_max_entries_mutex, COPY_HISTROY};
 use serde::{Deserialize, Serialize};
-use serde_json::Number;
 use std::sync::{Mutex, MutexGuard};
 use uuid::Uuid;
 
@@ -28,11 +27,6 @@ pub fn get_global_history_mutex() -> MutexGuard<'static, Vec<CopyRecord>> {
  Main command functions
  functions that must be invoked from the Frontend client
 */
-
-#[tauri::command]
-pub fn get_enties_limit_by_user(limit: Number) {
-    println!("limit set to{}", limit);
-}
 
 //Create
 #[tauri::command]
@@ -94,6 +88,7 @@ pub fn del_entry(id: String) -> Result<(), String> {
         Some(target_index) => {
             let removed_item = history.remove(target_index);
             println!("Entry with id: {} deleted.", removed_item.id);
+            save_history(&history).map_err(|e| format!("Failded to Save data {}", e))?;
             Ok(())
         }
         None => Err("Element not found".to_string()),
@@ -105,5 +100,6 @@ pub fn del_entry(id: String) -> Result<(), String> {
 pub fn delete_all() -> Result<(), String> {
     let mut history = get_global_history_mutex();
     history.clear();
+    save_history(&history).map_err(|e| format!("Failded to Save data {}", e))?;
     Ok(())
 }

@@ -38,7 +38,7 @@ export const QuickAcces = async (_NewShortCut?: string) => {
     if (FetchShortCut) {
       QuickAccesShortcut = FetchShortCut;
     }
-    console.log(QuickAccesShortcut);
+    // console.log(QuickAccesShortcut);
     await register(QuickAccesShortcut, async (e: ShortcutEvent) => {
       if (e.state == "Pressed") {
         await invoke("show_window_using_shortcut");

@@ -14,7 +14,7 @@ interface ElementProps {
   sections: string;
 }
 
-const EmojiItem = memo(({ index, i, sections }: ElementProps) => {
+const EmojiItem = memo(({ index, i }: ElementProps) => {
   return (
     <div
       key={index + i.label}
@@ -22,13 +22,13 @@ const EmojiItem = memo(({ index, i, sections }: ElementProps) => {
       onClick={() => HandleCopy(i.emoji)}
     >
       <span>{i.emoji}</span>
-      <span
+      {/*<span
         className={`opacity-0 text-[12px] pointer-events-none group-hover:opacity-100 absolute ${
           sections === "Quaso" ? "bottom-10" : "bottom-11"
         } left-0 right-10 bg-blue-500  text-white flex justify-center items-center z-5 rounded-md p-1 w-full line-clamp-1 break-all`}
       >
         {i.label}
-      </span>
+      </span>*/}
     </div>
   );
 });

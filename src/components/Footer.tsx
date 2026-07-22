@@ -13,9 +13,6 @@ export default function Footer() {
       <div className="text-[15px] mt-3  text-gray-300 px-2 font-bold">Copy Chan - Smol Clipboard manager :3</div>
       <div className="text-[12px]  text-gray-300 px-2">This project is maintained and developed by Adi under Smug Cat's. Thank you for using Copy Chan :)</div>
       <section className="select-none mt-2 flex gap-2 items-end">
-        <div className="bg-white rounded-full mb-1">
-          <img src={"/SmugCat.png"} alt="copychan" draggable="false" width={70} />
-        </div>
         <img src={"/Copychan.png"} alt="copychan" draggable="false" width={80} />
         <div className="pb-2">
           <h1 className="text-[13px] dark:text-gray-300 text-gray-700">build {AppVersion}</h1>
