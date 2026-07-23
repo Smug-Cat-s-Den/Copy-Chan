@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { history } from "../../types/app.types";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import { HandleCopy } from "../../utils/utils";
+import { HandleCopy } from "../../Utils/Utils";
 import Records from "../Records";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { ask } from "@tauri-apps/plugin-dialog";

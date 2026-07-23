@@ -6,7 +6,7 @@ import {
   unregister,
   unregisterAll,
 } from "@tauri-apps/plugin-global-shortcut";
-import { store } from "./utils";
+import { store } from "./Utils";
 import { keybinds } from "./Keybinds";
 
 /*

@@ -3,10 +3,10 @@ import { useCallback, useEffect, useState } from "react";
 import { SliderButton } from "../SliderButton";
 import RecordKeyBind from "../RecordKeyBind";
 import Warning from "../settings/Warning";
-import { QuickAcces, QuickAccesShortcut } from "../../utils/RegisterShortcut";
-import { keybinds } from "../../utils/Keybinds";
+import { QuickAcces, QuickAccesShortcut } from "../../Utils/RegisterShortcut";
+import { keybinds } from "../../Utils/Keybinds";
 import { invoke } from "@tauri-apps/api/core";
-import { store } from "../../utils/utils";
+import { store } from "../../Utils/Utils";
 import Footer from "../Footer";
 
 const Settings = () => {

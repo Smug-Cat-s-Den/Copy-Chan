@@ -3,11 +3,11 @@ import "./App.css";
 import Copy from "./components/tabs/Copy";
 import { TabItem } from "./types/app.types";
 import Nav from "./components/nav/Nav";
-import { setupTray } from "./utils/systemtray";
+import { setupTray } from "./Utils/systemtray";
 import Settings from "./components/tabs/Settings";
-import { RegisterShortCuts } from "./utils/RegisterShortcut";
+import { RegisterShortCuts } from "./Utils/RegisterShortcut";
 import EmojiPicker from "./components/tabs/EmojiPicker";
-import { appWindow } from "./utils/utils";
+import { appWindow } from "./Utils/Utils";
 
 //Emoji datasets
 import { graphicEmojiArray } from "./EmojiData/Visual";

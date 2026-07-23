@@ -1,8 +1,8 @@
 [package]
-name = "copyhistory"
-version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+name = "copychan"
+version = "0.0.9"
+description = "Your smol :3 and encrypted persistent clipboard manager"
+authors = ["Adi, Smug Cat's"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

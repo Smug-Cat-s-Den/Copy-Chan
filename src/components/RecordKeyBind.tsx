@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import { MdDone } from "react-icons/md";
-import { FormatKeys, store, ValidateKeybinds } from "../utils/utils";
-import { RegisterShortCuts } from "../utils/RegisterShortcut";
+import { FormatKeys, store, ValidateKeybinds } from "../Utils/Utils";
+import { RegisterShortCuts } from "../Utils/RegisterShortcut";
 import { unregisterAll } from "@tauri-apps/plugin-global-shortcut";
 
 interface props {

@@ -1,5 +1,5 @@
 import { memo, useMemo, useState } from "react";
-import { HandleCopy, ParseAndGroupEmoji } from "../../utils/utils";
+import { HandleCopy, ParseAndGroupEmoji } from "../../Utils/Utils";
 import SearchBox from "../SearchBox";
 import { Emojies } from "../../types/app.types";
 
