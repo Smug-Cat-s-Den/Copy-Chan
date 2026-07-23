@@ -28,6 +28,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        run: "npm i pnpm"
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -56,14 +59,14 @@ jobs:
             xdg-utils
 
       - name: Install frontend dependencies
-        run: pnpm install 
+        run: pnpm install
 
       - name: Build and Release Tauri App
         uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: __VERSION__ # Automatically uses the version in tauri.conf.json matching the git tag
+          tagName: __VERSION__
           releaseName: "App v__VERSION__"
           releaseBody: "See the assets to download and install this version."
           releaseDraft: true # Creates a draft release so you can inspect binaries before public rollout
