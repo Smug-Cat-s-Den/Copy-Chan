@@ -28,14 +28,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        run: "npm i pnpm"
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: "pnpm"
+
+      - name: Setup pnpm
+        run: npm i -g pnpm
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -69,5 +68,5 @@ jobs:
           tagName: __VERSION__
           releaseName: "App v__VERSION__"
           releaseBody: "See the assets to download and install this version."
-          releaseDraft: true # Creates a draft release so you can inspect binaries before public rollout
+          releaseDraft: true
           args: ${{ matrix.args }}
