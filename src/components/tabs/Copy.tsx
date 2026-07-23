@@ -66,6 +66,7 @@ const Copy = () => {
    */
   useEffect(() => {
     const HandleKeyNavigation = (e: KeyboardEvent) => {
+      e.preventDefault();
       if (e.key === "ArrowDown") {
         setFocusIndex((prev) => {
           const totalItems = Pinned.length + History.length;
@@ -81,7 +82,7 @@ const Copy = () => {
 
   /*
    *Combaine list so that Even after pinning user can navigate up or down
-   * Then display the current 
+   * Then display the current
    * */
   const CombinedList = [...Pinned, ...History];
   useEffect(() => {
