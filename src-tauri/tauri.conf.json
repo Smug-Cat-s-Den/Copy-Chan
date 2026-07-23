@@ -39,7 +39,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": "msi",
+    "targets": "all",
     "resources": ["icons/*"],
     "longDescription": "Your smol :3 and encrypted persistent clipboard manager",
     "icon": [

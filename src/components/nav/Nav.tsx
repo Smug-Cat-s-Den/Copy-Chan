@@ -28,7 +28,7 @@ const Nav = ({ ActiveTab, SetActiveTab }: NavProps) => {
           <button
             key={index}
             onClick={() => SetActiveTab(i)}
-            className={`dark:hover:bg-blue-800 hover:bg-blue-300 ${
+            className={`focus:outline-1 focus:outline-blue-600 dark:hover:bg-blue-800 hover:bg-blue-300 ${
               ActiveTab.label === i.label && "dark:bg-blue-800 bg-blue-300"
             } p-2 w-full rounded-xl mb-2`}
           >
@@ -37,7 +37,7 @@ const Nav = ({ ActiveTab, SetActiveTab }: NavProps) => {
         ))}
       </div>
       <button
-        className="mb-3 hover:bg-red-500 mr-2 p-2 rounded-md"
+        className="mb-3 hover:bg-red-500 mr-2 p-2 rounded-md focus:outline-1 focus:outline-blue-600"
         onClick={() => {
           (getCurrentWindow().hide(), SetActiveTab(items[0]));
         }}
