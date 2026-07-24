@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "cp -r ../../assets/* ./public/ && astro dev",
-    "build": "cp -r ../../assets/* ./public/ && astro build",
+    "build": "node copy-asset.js && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
