@@ -34,7 +34,9 @@ jobs:
           node-version: lts/*
 
       - name: Setup pnpm
-        run: npm i -g pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: latest
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -70,3 +72,6 @@ jobs:
           releaseBody: "See the assets to download and install this version."
           releaseDraft: true
           args: ${{ matrix.args }}
+          # --- MONOREPO PATH ADJUSTMENTS ---
+          projectPath: "apps/desktop"
+          configPath: "apps/desktop/tauri.conf.json"
