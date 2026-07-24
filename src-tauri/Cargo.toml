@@ -1,5 +1,5 @@
 [package]
-name = "copychan"
+name = "copy-chan"
 version = "0.0.9"
 description = "Your smol :3 and encrypted persistent clipboard manager"
 authors = ["Adi, Smug Cat's"]

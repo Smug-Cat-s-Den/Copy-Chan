@@ -22,6 +22,7 @@ const EmojiItem = memo(({ index, i }: ElementProps) => {
       onClick={() => HandleCopy(i.emoji)}
     >
       <span>{i.emoji}</span>
+      {/*Disable tip it looks ugly UwU*/}
       {/*<span
         className={`opacity-0 text-[12px] pointer-events-none group-hover:opacity-100 absolute ${
           sections === "Quaso" ? "bottom-10" : "bottom-11"

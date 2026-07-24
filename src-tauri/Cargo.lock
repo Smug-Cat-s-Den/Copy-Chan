@@ -771,7 +771,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "copychan"
+name = "copy-chan"
 version = "0.0.9"
 dependencies = [
  "aes-gcm",

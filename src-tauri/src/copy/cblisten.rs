@@ -24,20 +24,18 @@ pub fn copy_and_ignore(
 }
 
 pub fn cblisten(app_handle: tauri::AppHandle) {
-    let ah = app_handle.clone();
-
     let callback = move || {
-        let ah_inner = ah.clone();
+        let app_handle_clone = app_handle.clone();
         async_runtime::spawn(async move {
             //gatekeep when copied from the app else add them
-            let state = ah_inner.state::<ClipBoardState>();
+            let state = app_handle_clone.state::<ClipBoardState>();
             if state.ignore_next.load(Ordering::SeqCst) {
                 state.ignore_next.store(false, Ordering::SeqCst);
                 return;
             }
-            match ah_inner.clipboard().read_text() {
+            match app_handle_clone.clipboard().read_text() {
                 Ok(text) => {
-                    if let Err(e) = ah_inner.emit("clipboard-changed", text.clone()) {
+                    if let Err(e) = app_handle_clone.emit("clipboard-changed", text.clone()) {
                         eprintln!("Emit failed: {:?}", e);
                     }
                     let _ = copy_history_add(text);

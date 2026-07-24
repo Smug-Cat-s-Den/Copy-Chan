@@ -13,7 +13,7 @@ const Copy = () => {
   const [FocusIndex, setFocusIndex] = useState<number>(0);
   const recordElementsRef = useRef<Map<string, HTMLButtonElement>>(new Map());
 
-  async function fetchHistory() {
+  async function FetchHistory() {
     let history: history[] = await invoke("get_history");
     const Pinned: history[] = [];
     const notPinned: history[] = [];
@@ -27,18 +27,18 @@ const Copy = () => {
   async function removeHistory(id: string) {
     await invoke("del_entry", { id: id });
     recordElementsRef.current.delete(id);
-    fetchHistory();
+    FetchHistory();
   }
 
   async function PinHistory(id: string) {
     await invoke("pin_history", { id: id });
-    fetchHistory();
+    FetchHistory();
   }
 
   async function DeleteAll() {
     invoke("delete_all");
     recordElementsRef.current.clear();
-    fetchHistory();
+    FetchHistory();
   }
 
   const HandleClearAll = async () => {
@@ -54,11 +54,11 @@ const Copy = () => {
   };
 
   listen("clipboard-changed", async () => {
-    fetchHistory();
+    FetchHistory();
   });
 
   useEffect(() => {
-    fetchHistory();
+    FetchHistory();
   }, []);
 
   /**

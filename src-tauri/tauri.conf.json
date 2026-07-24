@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.9.5",
-  "productName": "Copy Chan",
-  "mainBinaryName": "copychan",
+  "productName": "copy-chan",
+  "mainBinaryName": "copy-chan",
   "version": "0.0.9",
   "identifier": "con.Copychan",
   "build": {
@@ -14,7 +14,7 @@
   "app": {
     "windows": [
       {
-        "title": "copy chan",
+        "title": "Copy chan",
         "width": 400,
         "height": 430,
         "resizable": false,
@@ -40,6 +40,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "windows": { "wix": { "dialogImagePath": "icons/CopyChanSetup.bmp" } },
     "resources": ["icons/*"],
     "longDescription": "Your smol :3 and encrypted persistent clipboard manager",
     "icon": [

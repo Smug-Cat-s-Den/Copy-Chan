@@ -2,13 +2,13 @@ name: "Publish Release"
 
 on:
   push:
-    tags:
-      - "v*" # Triggers whenever you push a tag starting with 'v' (e.g., v1.0.0)
+    branches:
+      - "pre-prod" # Triggers on each push on pre-prod branch
 
 jobs:
   publish-tauri:
     permissions:
-      contents: write # Required for tauri-action to create a GitHub release and upload assets
+      contents: write
     strategy:
       fail-fast: false
       matrix:
