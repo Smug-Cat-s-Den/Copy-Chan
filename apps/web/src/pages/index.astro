@@ -1,0 +1,24 @@
+---
+import CopyCTA from "../Components/CopyCTA.astro";
+import "../styles/global.css";
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="Copychan.png" />
+        <link rel="icon" href="Copychan.png" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>copychan</title>
+    </head>
+    <body>
+        <main class="bg-linear-to-b to-black from-blue-700 h-screen">
+            <div class="max-w-3xl w-full h-full mx-auto p-2">
+                <div class="w-full h-full flex justify-center items-center">
+                    <CopyCTA />
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

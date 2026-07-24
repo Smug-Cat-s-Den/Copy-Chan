@@ -1,4 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-src/EmojiData** linguist-generated
-src/components** linguist-vendored
+apps/desktop/src/EmojiData** linguist-generated
+apps/desktop/src/components** linguist-vendored

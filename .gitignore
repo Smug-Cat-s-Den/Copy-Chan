@@ -1,25 +1,40 @@
-# Logs
-logs
-copy_data.json
-*.log
+# Node modules (applies to root and all workspaces)
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+
+#logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Build outputs for Web and Frontend
+dist/
+.next/
+.astro/
+out/
+build/
+
+# Tauri Rust backend builds and logs (inside apps/desktop/src-tauri)
+apps/desktop/src-tauri/target/
+*.rs.bk
+
+# Environment variables and local settings
+.env
+.env.local
+.env.*.local
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+*.swp
