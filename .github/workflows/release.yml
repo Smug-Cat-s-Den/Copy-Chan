@@ -74,4 +74,4 @@ jobs:
           args: ${{ matrix.args }}
           # --- MONOREPO PATH ADJUSTMENTS ---
           projectPath: "apps/desktop"
-          configPath: "apps/desktop/tauri.conf.json"
+          configPath: "src-tauri/tauri.conf.json"
