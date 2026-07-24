@@ -14,11 +14,12 @@ pnpm-debug.log*
 dist/
 .next/
 .astro/
+.vercel/
 out/
 build/
 
 # Tauri Rust backend builds and logs (inside apps/desktop/src-tauri)
-apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/target/*
 *.rs.bk
 
 # Environment variables and local settings
@@ -38,3 +39,4 @@ Thumbs.db
 *.njsproj
 *.sln
 *.swp
+.vercel

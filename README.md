@@ -1,4 +1,4 @@
-# Copy Chan — Smol Clipboard manager :3 <br>![Copy Chan](src-tauri/icons/Copychan.png)
+# Copy Chan — Smol Clipboard manager :3 <br>![Copy Chan](assets/Copychan.png)
 
 **Copy Chan** is a cross-platform desktop clipboard/history manager with a Emoji and symbols picker, built with **Tauri (Rust)** and **React + Vite**. Primarily made and optimized for **linux**.
 <br>this README explains what the project is, how to run it locally, and known issues you may encounter if you plan to run it. 
