@@ -1,0 +1,163 @@
+import { useEffect, useRef, useState } from "react";
+import { history } from "../../types/app.types";
+import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
+import { HandleCopy } from "../../Utils/Utils";
+import Records from "../Records";
+import { RiDeleteBin6Fill } from "react-icons/ri";
+import { ask } from "@tauri-apps/plugin-dialog";
+
+const Copy = () => {
+  const [History, setHistory] = useState<history[]>([]);
+  const [Pinned, setPinned] = useState<history[]>([]);
+  const [FocusIndex, setFocusIndex] = useState<number>(0);
+  const recordElementsRef = useRef<Map<string, HTMLButtonElement>>(new Map());
+
+  async function FetchHistory() {
+    let history: history[] = await invoke("get_history");
+    const Pinned: history[] = [];
+    const notPinned: history[] = [];
+    for (const rec of history) {
+      rec.pinned ? Pinned.push(rec) : notPinned.push(rec);
+    }
+    setPinned(Pinned);
+    setHistory(notPinned);
+  }
+
+  async function removeHistory(id: string) {
+    await invoke("del_entry", { id: id });
+    recordElementsRef.current.delete(id);
+    FetchHistory();
+  }
+
+  async function PinHistory(id: string) {
+    await invoke("pin_history", { id: id });
+    FetchHistory();
+  }
+
+  async function DeleteAll() {
+    invoke("delete_all");
+    recordElementsRef.current.clear();
+    FetchHistory();
+  }
+
+  const HandleClearAll = async () => {
+    const confirmed = await ask("Are you sure you want to clear everything?", {
+      title: "",
+      cancelLabel: "no",
+      kind: "warning",
+    });
+
+    if (confirmed) {
+      DeleteAll();
+    }
+  };
+
+  listen("clipboard-changed", async () => {
+    FetchHistory();
+  });
+
+  useEffect(() => {
+    FetchHistory();
+  }, []);
+
+  /**
+   * ArrowKey Navigation Example using Map values or flat array
+   */
+  useEffect(() => {
+    const HandleKeyNavigation = (e: KeyboardEvent) => {
+      e.preventDefault();
+      if (e.key === "ArrowDown") {
+        setFocusIndex((prev) => {
+          const totalItems = Pinned.length + History.length;
+          return prev < totalItems - 1 ? prev + 1 : prev;
+        });
+      } else if (e.key === "ArrowUp") {
+        setFocusIndex((prev) => (prev > 0 ? prev - 1 : 0));
+      }
+    };
+    window.addEventListener("keydown", HandleKeyNavigation);
+    return () => window.removeEventListener("keydown", HandleKeyNavigation);
+  }, [Pinned, History]);
+
+  /*
+   *Combaine list so that Even after pinning user can navigate up or down
+   * Then display the current
+   * */
+  const CombinedList = [...Pinned, ...History];
+  useEffect(() => {
+    const currentItem = CombinedList[FocusIndex];
+    if (currentItem) {
+      const el = recordElementsRef.current.get(currentItem.id);
+      el?.focus();
+    }
+  }, [FocusIndex, Pinned, History]);
+
+  return (
+    <main className="relative mr-1 rounded-2xl animate-fade-up">
+      {History.length > 0 && (
+        <div className="flex justify-end mx-2 sticky top-2">
+          <button
+            onClick={() => HandleClearAll()}
+            className="group relative flex text-xs items-center p-1 bg-red-400/80 backdrop-blur-[2px] drop-shadow-2xl rounded-md"
+          >
+            <RiDeleteBin6Fill /> +
+            <span className="bg-blue-600 z-10 group-hover:opacity-100 opacity-0 duration-200 ease-in-out text-white rounded absolute w-15 right-9 -top-0.5 p-2">
+              clear all
+              <div className="h-2 w-2 rotate-45 bg-blue-600 absolute -right-1 top-2" />
+            </span>
+          </button>
+        </div>
+      )}
+
+      {Pinned.length > 0 && (
+        <div>
+          {Pinned.map((item, index) => (
+            <Records
+              ref={(el: HTMLButtonElement | null) => {
+                if (el) {
+                  recordElementsRef.current.set(item.id, el);
+                } else {
+                  recordElementsRef.current.delete(item.id);
+                }
+              }}
+              key={item.id}
+              i={item}
+              index={index}
+              HandleCopy={HandleCopy}
+              PinHistory={PinHistory}
+              removeHistory={(id) => removeHistory(id)}
+            />
+          ))}
+          <h1 className="flex justify-center border-b border-blue-600 mx-2 pb-4" />
+        </div>
+      )}
+
+      <div className="mt-5">
+        {History.length !== 0 ? (
+          History.map((item, index) => (
+            <Records
+              key={item.id}
+              i={item}
+              ref={(el: HTMLButtonElement | null) => {
+                if (el) {
+                  recordElementsRef.current.set(item.id, el);
+                } else {
+                  recordElementsRef.current.delete(item.id);
+                }
+              }}
+              index={index}
+              HandleCopy={HandleCopy}
+              removeHistory={(id) => removeHistory(id)}
+              PinHistory={PinHistory}
+            />
+          ))
+        ) : (
+          <span className="flex justify-center mt-3 ml-3">maybe copy something :3</span>
+        )}
+      </div>
+    </main>
+  );
+};
+
+export default Copy;

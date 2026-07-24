@@ -1,8 +1,10 @@
 allowBuilds:
   esbuild: true
+packages:
+  - "apps/*"
 minimumReleaseAgeExclude:
   - rollup@4.59.0
   - picomatch@4.0.4
   - vite@7.3.2 || 7.3.5
   - postcss@8.5.10
-  - '@babel/core@7.29.1'
+  - "@babel/core@7.29.1"

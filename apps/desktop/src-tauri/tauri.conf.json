@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.9.5",
+  "productName": "copy-chan",
+  "mainBinaryName": "copy-chan",
+  "version": "0.0.9",
+  "identifier": "con.Copychan",
+  "build": {
+    "removeUnusedCommands": true,
+    "beforeDevCommand": "pnpm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "pnpm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Copy chan",
+        "width": 400,
+        "height": 430,
+        "resizable": false,
+        "alwaysOnTop": true,
+        "decorations": false,
+        "visible": false,
+        "skipTaskbar": true,
+        "closable": true,
+        "transparent": true,
+        "acceptFirstMouse": true,
+        "contentProtected": true,
+        "theme": "Dark"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' asset.localhost https://asset.localhost",
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["**"]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "windows": { "wix": { "dialogImagePath": "icons/CopyChanSetup.bmp" } },
+    "resources": ["icons/*"],
+    "longDescription": "Your smol :3 and encrypted persistent clipboard manager",
+    "icon": [
+      "icons/CopychanSmol.png",
+      "icons/Copychan.png",
+      "icons/CopychanBig.png",
+      "icons/icon.icns",
+      "icons/CopychanIco.ico",
+      "icons/CopyChanSetup.bmp"
+    ]
+  }
+}

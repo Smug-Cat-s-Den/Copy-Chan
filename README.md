@@ -1,4 +1,4 @@
-# Copy Chan — Smol Clipboard manager :3 <br>![Copy Chan](src-tauri/icons/Copychan.png)
+# Copy Chan — Smol Clipboard manager :3 <br>![Copy Chan](assets/Copychan.png)
 
 **Copy Chan** is a cross-platform desktop clipboard/history manager with a Emoji and symbols picker, built with **Tauri (Rust)** and **React + Vite**. Primarily made and optimized for **linux**.
 <br>this README explains what the project is, how to run it locally, and known issues you may encounter if you plan to run it. 
@@ -78,29 +78,20 @@ Prerequisites:
 - Rust toolchain and cargo (for Tauri / desktop builds)
 - Platform dependencies for WebKitGTK (see Troubleshooting below)
 
-Typical steps to run the app in development mode (frontend):
-
-```bash
-# install frontend deps
-npm install
-
-# run Vite development server
-npm run dev
-```
+## Typical steps to run the app in development mode (frontend):
 
 To run the Tauri desktop build/dev mode (desktop + Rust backend):
 
 ```bash
 # start development with Tauri (may build both frontend and backend code)
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 To build production packages:
 
 ```bash
-npm run build
 # then build native packages with the Tauri CLI
-npm run tauri build
+pnpm run tauri build
 ```
 
 ```bash

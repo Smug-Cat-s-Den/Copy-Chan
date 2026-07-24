@@ -1,36 +1,10 @@
 {
-  "name": "copyhistory",
+  "name": "copy-chan-monorepo",
   "private": true,
-  "version": "0.1.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "tauri": "tauri"
-  },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.1.18",
-    "@tauri-apps/api": "^2.10.1",
-    "@tauri-apps/plugin-autostart": "^2.5.1",
-    "@tauri-apps/plugin-clipboard-manager": "^2.3.2",
-    "@tauri-apps/plugin-dialog": "^2.6.0",
-    "@tauri-apps/plugin-global-shortcut": "^2.3.1",
-    "@tauri-apps/plugin-opener": "^2.5.2",
-    "emoji-datasource-google": "^16.0.0",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "react-icons": "^5.5.0"
-  },
-  "devDependencies": {
-    "@tauri-apps/cli": "^2.9.6",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^4.7.0",
-    "autoprefixer": "^10.4.22",
-    "postcss": "^8.5.17",
-    "tailwindcss": "^4.1.18",
-    "typescript": "~5.8.3",
-    "vite": "^7.3.6"
+    "dev:desktop": "pnpm --filter copy-chan tauri dev",
+    "dev:web": "pnpm --filter web dev",
+    "build:desktop": "pnpm --filter copy-chan tauri build",
+    "build:web": "pnpm --filter web build"
   }
 }
