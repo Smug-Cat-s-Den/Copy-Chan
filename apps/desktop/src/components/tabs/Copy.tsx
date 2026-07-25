@@ -66,14 +66,19 @@ const Copy = () => {
    */
   useEffect(() => {
     const HandleKeyNavigation = (e: KeyboardEvent) => {
-      e.preventDefault();
-      if (e.key === "ArrowDown") {
-        setFocusIndex((prev) => {
-          const totalItems = Pinned.length + History.length;
-          return prev < totalItems - 1 ? prev + 1 : prev;
-        });
-      } else if (e.key === "ArrowUp") {
-        setFocusIndex((prev) => (prev > 0 ? prev - 1 : 0));
+      let K = e.key;
+      switch (K) {
+        case "ArrowDown":
+          e.preventDefault();
+          setFocusIndex((prev) => {
+            const totalItems = Pinned.length + History.length;
+            return prev < totalItems - 1 ? prev + 1 : prev;
+          });
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setFocusIndex((prev) => (prev > 0 ? prev - 1 : 0));
+          break;
       }
     };
     window.addEventListener("keydown", HandleKeyNavigation);
