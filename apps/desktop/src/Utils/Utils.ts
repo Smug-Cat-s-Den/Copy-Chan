@@ -14,7 +14,6 @@ Copy logic shared between Emoji picker and Clipboard tab
 export async function HandleCopy(item: string) {
   if (!item) return;
   await invoke("copy_and_ignore", { item });
-  await appWindow.hide();
 }
 
 export function ParseAndGroupEmoji(item: Emojies[]) {
