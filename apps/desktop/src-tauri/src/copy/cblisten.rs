@@ -16,8 +16,6 @@ use enigo::{
  Simulate paste depending on the device
 */
 fn simulate_paste(is_mac: bool) -> Result<(), String> {
-    println!("Called simulate paste");
-    // std::thread::sleep(std::time::Duration::from_millis(100)); //sleep the thread to allow the window to refocus to the previous one
     let mut enigo = Enigo::new(&Settings::default()).map_err(|e| e.to_string())?;
     if is_mac {
         enigo.key(Key::Meta, Press).map_err(|e| e.to_string())?;
