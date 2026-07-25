@@ -4,10 +4,9 @@ on:
   push:
     branches:
       - "pre-prod" # Triggers on each push on pre-prod branch
-    paths-ignore:
-      - "apps/web/**"
-      - "docs/**"
-      - "README.md"
+    paths:
+      - "apps/desktop/**"
+      - "packages/**"
 
 jobs:
   publish-tauri:
