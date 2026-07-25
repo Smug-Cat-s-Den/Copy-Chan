@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - "pre-prod" # Triggers on each push on pre-prod branch
+    paths:
+      - "apps/desktop/**"
+      - "packages/**"
 
 jobs:
   publish-tauri:
@@ -68,7 +71,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: app-v__VERSION__
-          releaseName: "App v__VERSION__"
+          releaseName: "build __VERSION__"
           releaseBody: "See the assets to download and install this version."
           releaseDraft: true
           args: ${{ matrix.args }}

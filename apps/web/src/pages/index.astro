@@ -1,4 +1,5 @@
 ---
+import Btn from "../Components/Btn.astro";
 import CopyCTA from "../Components/CopyCTA.astro";
 import "../styles/global.css";
 ---
@@ -15,8 +16,11 @@ import "../styles/global.css";
     <body>
         <main class="bg-linear-to-b to-black from-blue-700 h-screen">
             <div class="max-w-3xl w-full h-full mx-auto p-2">
-                <div class="w-full h-full flex justify-center items-center">
+                <div
+                    class="w-full h-full flex flex-col justify-center items-center"
+                >
                     <CopyCTA />
+                    <Btn />
                 </div>
             </div>
         </main>
