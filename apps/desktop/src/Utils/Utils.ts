@@ -1,13 +1,16 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { Emojies, GroupedEmojies } from "../types/app.types";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
-import { invoke } from "@tauri-apps/api/core";
 import { Store } from "@tauri-apps/plugin-store";
+import { invoke } from "@tauri-apps/api/core";
 
 export const appWindow = getCurrentWindow();
 export const currentWindow = WebviewWindow.getCurrent();
 export const store = await Store.load("config.json", { autoSave: false });
 
+/*
+Copy logic shared between Emoji picker and Clipboard tab
+*/
 export async function HandleCopy(item: string) {
   if (!item) return;
   await invoke("copy_and_ignore", { item });
