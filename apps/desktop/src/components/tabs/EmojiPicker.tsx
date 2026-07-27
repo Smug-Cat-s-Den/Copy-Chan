@@ -19,7 +19,7 @@ const EmojiItem = memo(({ index, i }: ElementProps) => {
     <div
       key={index + i.label}
       className="p-2 bg-blue-600/30 relative group rounded-md"
-      onClick={() => HandleCopy(i.emoji)}
+      onClick={() => HandleCopy(i.emoji, false)}
     >
       <span>{i.emoji}</span>
       {/*Disable tip it looks ugly UwU*/}
