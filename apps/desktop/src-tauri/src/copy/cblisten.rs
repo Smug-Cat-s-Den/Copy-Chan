@@ -75,7 +75,7 @@ pub fn copy_and_ignore(
     state: tauri::State<'_, ClipBoardState>,
     app: tauri::AppHandle,
 ) -> Result<(), String> {
-    //updates flag to true so that when writing it ignores the copy chan's clipbord update
+    //updates flag to true so that when writing it ignores copy chan's clipbord update
     state.ignore_next.store(true, Ordering::SeqCst);
     if is_image {
         /*
@@ -125,6 +125,9 @@ pub fn copy_and_ignore(
  * Emit signal for the UI to render the latest data
  */
 fn emit_clipboard_changed(app_handle: &tauri::AppHandle, data: String, is_image: bool) {
+    let state = app_handle.state::<ClipBoardState>();
+    state.ignore_next.store(true, Ordering::SeqCst);
+
     let _ = app_handle
         .emit("clipboard-changed", &data)
         .map_err(|e| eprintln!("Failed emit clipboard-changed {}", e));
@@ -147,26 +150,19 @@ pub fn cblisten(app_handle: tauri::AppHandle) {
             }
             let clipboard = app_handle_clone.clipboard();
             // Image data
-            match clipboard.read_image() {
-                Ok(img) => {
-                    if let Some(final_image_string) = parse_into_base64_image(img) {
-                        // final_image save to bin
-                        // println!("Final Image string: {}", final_image_string);
-                        if !final_image_string.trim().is_empty() {
-                            emit_clipboard_changed(&app_handle_clone, final_image_string, true);
-                        }
+            if let Ok(img) = clipboard.read_image() {
+                if let Some(final_image_string) = parse_into_base64_image(img) {
+                    // final_image save to bin
+                    // println!("Final Image string: {}", final_image_string);
+                    if !final_image_string.trim().is_empty() {
+                        emit_clipboard_changed(&app_handle_clone, final_image_string, true);
                     }
                 }
-                Err(e) => eprintln!("Failed to read image from clipoard {}", e),
-            }
-            // Text data
-            match clipboard.read_text() {
-                Ok(text) => {
-                    if !text.trim().is_empty() {
-                        emit_clipboard_changed(&app_handle_clone, text, false);
-                    }
+            } else if let Ok(text) = clipboard.read_text() {
+                // Text data
+                if !text.trim().is_empty() {
+                    emit_clipboard_changed(&app_handle_clone, text, false);
                 }
-                Err(e) => eprintln!("Failed to read clipboard: {:?}", e),
             }
         });
     };
