@@ -6,13 +6,11 @@ use crate::window_pos::window_pos;
 use crate::{
     copy::{
         cblisten::{cblisten, copy_and_ignore},
-        copy::{
-            copy_history_add, del_entry, delete_all, get_history,
-            pin_history, CopyRecord,
-        },
+        copy::{del_entry, delete_all, get_history, pin_history, CopyRecord},
     },
     core::{load_and_save::load_history, window_pos},
 };
+use std::collections::HashSet;
 use std::sync::MutexGuard;
 
 use once_cell::sync::OnceCell;
@@ -31,7 +29,11 @@ pub struct ClipBoardState {
  * In memory Clipbord data
  */
 static COPY_HISTROY: OnceLock<Mutex<Vec<CopyRecord>>> = OnceLock::new();
+static COPY_HASH: OnceLock<Mutex<HashSet<String>>> = OnceLock::new();
 
+pub fn get_copy_hash() -> &'static Mutex<HashSet<String>> {
+    COPY_HASH.get_or_init(|| Mutex::new(HashSet::new()))
+}
 /*
  * Max entries
  */
@@ -52,13 +54,20 @@ fn update_max_entries_on_memory(new_value: usize) {
  * Data Directory initialization
  */
 static COPY_PATH: OnceCell<PathBuf> = OnceCell::new();
+static IMAGE_COPY_PATH: OnceCell<PathBuf> = OnceCell::new();
 
 fn set_global_data_path(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let mut path = app.path().app_config_dir()?;
-    path.push("copyhistory");
+    path.push("store");
     std::fs::create_dir_all(&path)?;
     path.push("data.bin");
-    COPY_PATH.set(path).expect("Path already set");
+    COPY_PATH.set(path.clone()).expect("Copy path already set");
+    path.pop();
+    path.push("Imgs");
+    std::fs::create_dir_all(&path)?;
+    IMAGE_COPY_PATH
+        .set(path.clone())
+        .expect("Image path already set");
     Ok(())
 }
 
@@ -122,7 +131,6 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            copy_history_add,
             del_entry,
             pin_history,
             get_history,

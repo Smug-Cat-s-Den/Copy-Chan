@@ -43,6 +43,8 @@ aes-gcm = "0.11.0"
 tauri-plugin-prevent-default = "5"
 tauri-plugin-store = "2"
 enigo = "0.6.1"
+image = "0.25.10"
+base64 = "0.23.0"
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.

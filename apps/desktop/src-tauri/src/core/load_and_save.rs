@@ -59,3 +59,5 @@ pub fn save_history(history: &Vec<CopyRecord>) -> Result<()> {
     writer.write_all(&encrypted_data)?;
     Ok(())
 }
+
+

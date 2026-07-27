@@ -24,21 +24,21 @@ const Copy = () => {
     setHistory(notPinned);
   }
 
-  async function removeHistory(id: string) {
-    await invoke("del_entry", { id: id });
+  async function removeHistory(id: string, i?: string, isImage?: boolean) {
+    await invoke("del_entry", { id: id, content: i, isImage: isImage });
     recordElementsRef.current.delete(id);
-    FetchHistory();
+    await FetchHistory();
   }
 
   async function PinHistory(id: string) {
     await invoke("pin_history", { id: id });
-    FetchHistory();
+    await FetchHistory();
   }
 
   async function DeleteAll() {
-    invoke("delete_all");
+    await invoke("delete_all");
     recordElementsRef.current.clear();
-    FetchHistory();
+    await FetchHistory();
   }
 
   const HandleClearAll = async () => {
@@ -54,7 +54,7 @@ const Copy = () => {
   };
 
   listen("clipboard-changed", async () => {
-    FetchHistory();
+    await FetchHistory();
   });
 
   useEffect(() => {
@@ -131,7 +131,7 @@ const Copy = () => {
               index={index}
               HandleCopy={HandleCopy}
               PinHistory={PinHistory}
-              removeHistory={(id) => removeHistory(id)}
+              removeHistory={(id) => removeHistory(id, item.item, item.is_image)}
             />
           ))}
           <h1 className="flex justify-center border-b border-blue-600 mx-2 pb-4" />
@@ -153,7 +153,7 @@ const Copy = () => {
               }}
               index={index}
               HandleCopy={HandleCopy}
-              removeHistory={(id) => removeHistory(id)}
+              removeHistory={(id) => removeHistory(id, item.item, item.is_image)}
               PinHistory={PinHistory}
             />
           ))

@@ -1,6 +1,7 @@
 use crate::core::load_and_save::save_history;
-use crate::{get_max_entries_mutex, COPY_HISTROY};
+use crate::{get_max_entries_mutex, COPY_HISTROY, IMAGE_COPY_PATH};
 use serde::{Deserialize, Serialize};
+use std::fs;
 use std::sync::{Mutex, MutexGuard};
 use uuid::Uuid;
 
@@ -13,6 +14,7 @@ pub struct CopyRecord {
     id: Uuid,
     item: String,
     pinned: bool,
+    is_image: bool,
 }
 
 // Helpers
@@ -27,14 +29,14 @@ pub fn get_global_history_mutex() -> MutexGuard<'static, Vec<CopyRecord>> {
  Main command functions
  functions that must be invoked from the Frontend client
 */
-
 //Create
-#[tauri::command]
-pub fn copy_history_add(content: String) -> Result<(), String> {
+// #[tauri::command]
+pub fn copy_history_add(content: String, is_image: bool) -> Result<(), String> {
     let new_item: CopyRecord = CopyRecord {
         id: Uuid::new_v4(),
         item: content,
         pinned: false,
+        is_image: is_image,
     };
 
     let mut history = get_global_history_mutex();
@@ -78,7 +80,13 @@ pub fn pin_history(id: Uuid) -> Result<(), String> {
 
 //Delete
 #[tauri::command]
-pub fn del_entry(id: String) -> Result<(), String> {
+pub fn del_entry(id: String, content: Option<String>, is_image: bool) -> Result<(), String> {
+    if is_image {
+        //del the file
+        if let Some(content) = content {
+            let _ = fs::remove_file(&content).map_err(|e| e.to_string())?;
+        }
+    }
     let target_uuid =
         Uuid::parse_str(&id).map_err(|e| format!("Invalid uuid for deletion: {}", e))?;
 
@@ -101,5 +109,11 @@ pub fn delete_all() -> Result<(), String> {
     let mut history = get_global_history_mutex();
     history.clear();
     save_history(&history).map_err(|e| format!("Failded to Save data {}", e))?;
+    
+    let base_path = IMAGE_COPY_PATH.get().expect("path not found");
+    if base_path.exists() {
+        fs::remove_dir_all(base_path).map_err(|e| e.to_string())?;
+    }
+
     Ok(())
 }
