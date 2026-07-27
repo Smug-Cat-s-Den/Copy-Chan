@@ -1,6 +1,7 @@
 use crate::core::load_and_save::save_history;
-use crate::{get_max_entries_mutex, COPY_HISTROY};
+use crate::{get_max_entries_mutex, COPY_HISTROY, IMAGE_COPY_PATH};
 use serde::{Deserialize, Serialize};
+use std::fs;
 use std::sync::{Mutex, MutexGuard};
 use uuid::Uuid;
 
@@ -79,7 +80,13 @@ pub fn pin_history(id: Uuid) -> Result<(), String> {
 
 //Delete
 #[tauri::command]
-pub fn del_entry(id: String) -> Result<(), String> {
+pub fn del_entry(id: String, content: Option<String>, is_image: bool) -> Result<(), String> {
+    if is_image {
+        //del the file
+        if let Some(content) = content {
+            let _ = fs::remove_file(&content).map_err(|e| e.to_string())?;
+        }
+    }
     let target_uuid =
         Uuid::parse_str(&id).map_err(|e| format!("Invalid uuid for deletion: {}", e))?;
 
@@ -101,6 +108,10 @@ pub fn del_entry(id: String) -> Result<(), String> {
 pub fn delete_all() -> Result<(), String> {
     let mut history = get_global_history_mutex();
     history.clear();
+
+    let _ = fs::remove_dir_all(IMAGE_COPY_PATH.get().expect("path not found"))
+        .map_err(|e| e.to_string())?; //remove all images
+
     save_history(&history).map_err(|e| format!("Failded to Save data {}", e))?;
     Ok(())
 }

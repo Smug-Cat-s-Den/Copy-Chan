@@ -1,4 +1,3 @@
-
 use clipboard_listener::listen_clipboard;
 use image::RgbaImage;
 use std::fs;
@@ -67,11 +66,14 @@ fn parse_into_base64_image(img: Image<'_>) -> Option<String> {
                 .expect("failed to get image copy path");
             let main_path = base_path.join(file_name);
 
-            let _ = image_bytes
-                .save(&main_path)
-                .map_err(|e| eprintln!("failed to save image (69,cblisten), {}", e));
+            let saved = image_bytes.save(&main_path).is_ok();
+            if !saved {
+                let _ = fs::create_dir_all(&base_path);
+                let _ = image_bytes.save(&main_path).map_err(|e| e.to_string());
+            }
+
             let path_string = main_path.to_string_lossy().to_string();
-            println!("Image path : {}",path_string);
+            println!("Image path : {}", path_string);
             return Some(path_string);
         }
     }

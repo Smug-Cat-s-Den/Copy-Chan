@@ -9,7 +9,7 @@ interface props {
   index: number;
   HandleCopy: (content: string, is_image: boolean) => void;
   PinHistory: (id: string) => void;
-  removeHistory: (id: string) => void;
+  removeHistory: (id: string, content?: String, isImage?: boolean) => void;
 }
 const Records = forwardRef<HTMLButtonElement, props>(
   ({ i, HandleCopy, PinHistory, removeHistory }: props, ref) => {
@@ -38,7 +38,10 @@ const Records = forwardRef<HTMLButtonElement, props>(
               } hover:scale-130 `}
             />
           </button>
-          <button className="h-fit rounded-md" onClick={() => removeHistory(i.id)}>
+          <button
+            className="h-fit rounded-md"
+            onClick={() => removeHistory(i.id, i.item, i.is_image)}
+          >
             <RiDeleteBin6Fill size={17} className="hover:text-red-500 hover:scale-130" />
           </button>
         </div>

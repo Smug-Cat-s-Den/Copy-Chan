@@ -60,7 +60,9 @@ fn set_global_data_path(app: &mut tauri::App) -> Result<(), Box<dyn std::error::
     path.pop();
     path.push("Imgs");
     std::fs::create_dir_all(&path)?;
-    IMAGE_COPY_PATH.set(path.clone()).expect("Image path already set");
+    IMAGE_COPY_PATH
+        .set(path.clone())
+        .expect("Image path already set");
     Ok(())
 }
 
@@ -96,7 +98,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::new().build())
         .manage(ClipBoardState {
-            ignore_next: AtomicBool::new(false),
+            ignore_next: AtomicBool::new(true),
         })
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             let _ = app
