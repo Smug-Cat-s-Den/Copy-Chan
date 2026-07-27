@@ -13,6 +13,7 @@ pub struct CopyRecord {
     id: Uuid,
     item: String,
     pinned: bool,
+    is_image: bool,
 }
 
 // Helpers
@@ -27,14 +28,14 @@ pub fn get_global_history_mutex() -> MutexGuard<'static, Vec<CopyRecord>> {
  Main command functions
  functions that must be invoked from the Frontend client
 */
-
 //Create
-#[tauri::command]
-pub fn copy_history_add(content: String) -> Result<(), String> {
+// #[tauri::command]
+pub fn copy_history_add(content: String, is_image: bool) -> Result<(), String> {
     let new_item: CopyRecord = CopyRecord {
         id: Uuid::new_v4(),
         item: content,
         pinned: false,
+        is_image: is_image,
     };
 
     let mut history = get_global_history_mutex();

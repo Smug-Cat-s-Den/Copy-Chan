@@ -7,7 +7,7 @@ use crate::{
     copy::{
         cblisten::{cblisten, copy_and_ignore},
         copy::{
-            copy_history_add, del_entry, delete_all, get_history,
+            del_entry, delete_all, get_history,
             pin_history, CopyRecord,
         },
     },
@@ -55,7 +55,7 @@ static COPY_PATH: OnceCell<PathBuf> = OnceCell::new();
 
 fn set_global_data_path(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let mut path = app.path().app_config_dir()?;
-    path.push("copyhistory");
+    path.push("store");
     std::fs::create_dir_all(&path)?;
     path.push("data.bin");
     COPY_PATH.set(path).expect("Path already set");
@@ -122,7 +122,6 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            copy_history_add,
             del_entry,
             pin_history,
             get_history,
