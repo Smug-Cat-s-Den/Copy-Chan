@@ -1,7 +1,7 @@
 import { VscPinned } from "react-icons/vsc";
 import { history } from "../types/app.types";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import { convertFileSrc } from "@tauri-apps/api/core";
 
 interface props {
@@ -13,6 +13,15 @@ interface props {
 }
 const Records = forwardRef<HTMLButtonElement, props>(
   ({ i, HandleCopy, PinHistory, removeHistory }: props, ref) => {
+    const [RetryCount, setRetryCount] = useState(0);
+    const HandleError = (path: String) => {
+      if (RetryCount < 10) {
+        setRetryCount((prev) => prev + 1);
+      } else {
+        console.error(`Failed to fetch path: ${path}`);
+      }
+    };
+
     return (
       <div key={i.id} className="flex justify-between m-2 items-start">
         <button
@@ -22,7 +31,10 @@ const Records = forwardRef<HTMLButtonElement, props>(
         >
           {i.is_image ? (
             <img
-              src={convertFileSrc(i.item)}
+              src={`${convertFileSrc(i.item.trim())}?=${RetryCount}`}
+              alt={i.item.slice(0, -10)}
+              onLoad={() => setRetryCount(0)}
+              onError={() => HandleError(i.item)}
               className="p-0.75 object-cover bg-blue-600 rounded-md"
             />
           ) : (

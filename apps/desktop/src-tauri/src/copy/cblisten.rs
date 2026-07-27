@@ -1,6 +1,9 @@
 use clipboard_listener::listen_clipboard;
 use image::RgbaImage;
 use std::fs;
+use std::hash::DefaultHasher;
+use std::hash::Hash;
+use std::hash::Hasher;
 use std::io::Cursor;
 use std::sync::atomic::Ordering;
 use tauri::async_runtime;
@@ -9,9 +12,8 @@ use tauri::Emitter;
 use tauri::Manager;
 use tauri_plugin_clipboard_manager::ClipboardExt;
 
-use uuid::Uuid;
-
 use crate::copy::copy::copy_history_add;
+use crate::get_copy_hash;
 use crate::ClipBoardState;
 use crate::IMAGE_COPY_PATH;
 use enigo::{
@@ -53,27 +55,31 @@ fn parse_into_base64_image(img: Image<'_>) -> Option<String> {
 
     if let Some(image_bytes) = RgbaImage::from_raw(image_width, image_height, image_bytes) {
         let mut buffer_container = Cursor::new(Vec::<u8>::new());
-        println!("Image size: {}mb", image_bytes.len() as f64 / 1_048_576.0); // for debuging
+        // println!("Image size: {}mb", image_bytes.len() as f64 / 1_048_576.0); // for debuging
         let converted_png = image_bytes
             .write_to(&mut buffer_container, image::ImageFormat::Png)
             .is_ok(); // convert the bytes into a compressed png
 
         if converted_png {
-            let uuid = Uuid::new_v4();
-            let file_name = format!("copy_{}.png", uuid);
+            let mut hasher = DefaultHasher::new();
+            // image_bytes.hash(&mut hasher);
+            image_bytes.hash(&mut hasher);
+            let image_hasher = hasher.finish();
+            let file_name = format!("copy_{}.png", image_hasher);
             let base_path = IMAGE_COPY_PATH
                 .get()
                 .expect("failed to get image copy path");
             let main_path = base_path.join(file_name);
 
-            let saved = image_bytes.save(&main_path).is_ok();
-            if !saved {
-                let _ = fs::create_dir_all(&base_path);
-                let _ = image_bytes.save(&main_path).map_err(|e| e.to_string());
+            if !main_path.exists() {
+                let saved = image_bytes.save(&main_path).is_ok();
+                if !saved {
+                    let _ = fs::create_dir_all(&base_path);
+                    let _ = image_bytes.save(&main_path).map_err(|e| e.to_string());
+                }
             }
-
             let path_string = main_path.to_string_lossy().to_string();
-            println!("Image path : {}", path_string);
+            // println!("Image path : {}", path_string); // for debuging
             return Some(path_string);
         }
     }
@@ -137,7 +143,16 @@ pub fn copy_and_ignore(
 /*
  * Emit signal for the UI to render the latest data
  */
+
 fn emit_clipboard_changed(app_handle: &tauri::AppHandle, data: String, is_image: bool) {
+    //check if the data already exists in the global hash set
+    let mut copy_hash = get_copy_hash().lock().unwrap();
+    if copy_hash.contains(&data) {
+        return;
+    } else {
+        copy_hash.insert(data.clone());
+    }
+
     let _ = app_handle
         .emit("clipboard-changed", "")
         .map_err(|e| eprintln!("Failed emit clipboard-changed {}", e));
@@ -163,7 +178,7 @@ pub fn cblisten(app_handle: tauri::AppHandle) {
             if let Ok(img) = clipboard.read_image() {
                 if let Some(final_image_string) = parse_into_base64_image(img) {
                     if !final_image_string.trim().is_empty() {
-                        state.ignore_next.store(true, Ordering::SeqCst);
+                        // state.ignore_next.store(true, Ordering::SeqCst);
                         emit_clipboard_changed(&app_handle_clone, final_image_string, true);
                     }
                 }

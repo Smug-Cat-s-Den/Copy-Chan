@@ -27,18 +27,18 @@ const Copy = () => {
   async function removeHistory(id: string, i?: string, isImage?: boolean) {
     await invoke("del_entry", { id: id, content: i, isImage: isImage });
     recordElementsRef.current.delete(id);
-    FetchHistory();
+    await FetchHistory();
   }
 
   async function PinHistory(id: string) {
     await invoke("pin_history", { id: id });
-    FetchHistory();
+    await FetchHistory();
   }
 
   async function DeleteAll() {
-    invoke("delete_all");
+    await invoke("delete_all");
     recordElementsRef.current.clear();
-    FetchHistory();
+    await FetchHistory();
   }
 
   const HandleClearAll = async () => {
@@ -54,7 +54,7 @@ const Copy = () => {
   };
 
   listen("clipboard-changed", async () => {
-    FetchHistory();
+    await FetchHistory();
   });
 
   useEffect(() => {

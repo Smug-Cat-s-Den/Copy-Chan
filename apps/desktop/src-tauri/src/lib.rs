@@ -10,6 +10,7 @@ use crate::{
     },
     core::{load_and_save::load_history, window_pos},
 };
+use std::collections::HashSet;
 use std::sync::MutexGuard;
 
 use once_cell::sync::OnceCell;
@@ -28,7 +29,11 @@ pub struct ClipBoardState {
  * In memory Clipbord data
  */
 static COPY_HISTROY: OnceLock<Mutex<Vec<CopyRecord>>> = OnceLock::new();
+static COPY_HASH: OnceLock<Mutex<HashSet<String>>> = OnceLock::new();
 
+pub fn get_copy_hash() -> &'static Mutex<HashSet<String>> {
+    COPY_HASH.get_or_init(|| Mutex::new(HashSet::new()))
+}
 /*
  * Max entries
  */
@@ -98,7 +103,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::new().build())
         .manage(ClipBoardState {
-            ignore_next: AtomicBool::new(true),
+            ignore_next: AtomicBool::new(false),
         })
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             let _ = app
