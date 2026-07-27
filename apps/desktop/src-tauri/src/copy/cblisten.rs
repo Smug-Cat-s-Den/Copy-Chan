@@ -1,7 +1,7 @@
 use base64::engine::general_purpose;
 use base64::Engine;
 use clipboard_listener::listen_clipboard;
-use image::RgbImage;
+use image::RgbaImage;
 use std::io::Cursor;
 use std::sync::atomic::Ordering;
 use tauri::async_runtime;
@@ -49,7 +49,7 @@ fn parse_into_base64_image(img: Image<'_>) -> Option<String> {
     let image_height = img.height();
     let image_bytes = img.rgba().to_owned();
 
-    if let Some(image_bytes) = RgbImage::from_raw(image_width, image_height, image_bytes) {
+    if let Some(image_bytes) = RgbaImage::from_raw(image_width, image_height, image_bytes) {
         let mut buffer_container = Cursor::new(Vec::<u8>::new());
         println!("Image size: {}mb", image_bytes.len() as f64 / 1_048_576.0); // for debuging
         let converted_png = image_bytes
@@ -71,14 +71,37 @@ Ignore the next write if the global ignore_next state is true
 #[tauri::command]
 pub fn copy_and_ignore(
     item: String,
+    is_image: bool,
     state: tauri::State<'_, ClipBoardState>,
     app: tauri::AppHandle,
 ) -> Result<(), String> {
-    state.ignore_next.store(true, Ordering::SeqCst); //updates flag to ignore Clipbord update
+    //updates flag to true so that when writing it ignores the copy chan's clipbord update
+    state.ignore_next.store(true, Ordering::SeqCst);
+    if is_image {
+        /*
+          if image convert the base64 image back to image binary and copy to the clipboard
+        */
+        let base64_image_string = item.split(",").nth(1).unwrap_or(&item);
+        let image_bin = general_purpose::STANDARD
+            .decode(base64_image_string)
+            .map_err(|e| e.to_string())?;
+        let image = tauri::image::Image::from_bytes(&image_bin).map_err(|e| {
+            format!(
+                "Failed to convert binary to Image (88, cblisten), Error : {}",
+                e.to_string()
+            )
+        })?;
 
-    app.clipboard()
-        .write_text(item)
-        .map_err(|e| e.to_string())?;
+        // write the image to the clipboard
+        app.clipboard()
+            .write_image(&image)
+            .map_err(|e| e.to_string())?;
+    } else {
+        // if not image then write simple text
+        app.clipboard()
+            .write_text(&item)
+            .map_err(|e| e.to_string())?;
+    }
 
     //hide the window as soon as the write is done
     if let Some(window) = app.get_webview_window("main") {
@@ -128,10 +151,10 @@ pub fn cblisten(app_handle: tauri::AppHandle) {
                 Ok(img) => {
                     if let Some(final_image_string) = parse_into_base64_image(img) {
                         // final_image save to bin
-                        println!("Final Image string: {}", final_image_string);
-                        // if !final_image_string.trim().is_empty() {
-                        //     emit_clipboard_changed(&app_handle_clone, final_image_string, true);
-                        // }
+                        // println!("Final Image string: {}", final_image_string);
+                        if !final_image_string.trim().is_empty() {
+                            emit_clipboard_changed(&app_handle_clone, final_image_string, true);
+                        }
                     }
                 }
                 Err(e) => eprintln!("Failed to read image from clipoard {}", e),

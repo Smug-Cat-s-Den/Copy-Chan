@@ -6,7 +6,7 @@ import { forwardRef } from "react";
 interface props {
   i: history;
   index: number;
-  HandleCopy: (content: string) => void;
+  HandleCopy: (content: string, is_image: boolean) => void;
   PinHistory: (id: string) => void;
   removeHistory: (id: string) => void;
 }
@@ -17,9 +17,13 @@ const Records = forwardRef<HTMLButtonElement, props>(
         <button
           ref={ref}
           className="p-2 outline-2 outline-blue-600/50 mt-2 focus:outline-1.5 focus:outline-blue-500 text-left bg-linear-to-r from-blue-500/20 from via-blue-700 to-blue-500/20  hover:bg-blue-500 hover:via-blue-500  hover:text-white h-20 w-83 line-clamp-4 overflow-hidden rounded-md cursor-pointer"
-          onClick={() => HandleCopy(i.item)}
+          onClick={() => (i.is_image ? HandleCopy(i.item, true) : HandleCopy(i.item, false))}
         >
-          {i.item}
+          {i.is_image ? (
+            <img src={i.item} className="p-0.75 object-cover bg-blue-600 rounded-md" />
+          ) : (
+            i.item
+          )}
         </button>
         <div className="flex flex-col items-center gap-4 mt-2 h-20">
           <button className="h-fit rounded-md" onClick={() => PinHistory(i.id)}>
