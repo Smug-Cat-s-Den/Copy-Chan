@@ -2,6 +2,7 @@ import { VscPinned } from "react-icons/vsc";
 import { history } from "../types/app.types";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { forwardRef } from "react";
+import { convertFileSrc } from "@tauri-apps/api/core";
 
 interface props {
   i: history;
@@ -20,7 +21,10 @@ const Records = forwardRef<HTMLButtonElement, props>(
           onClick={() => (i.is_image ? HandleCopy(i.item, true) : HandleCopy(i.item, false))}
         >
           {i.is_image ? (
-            <img src={i.item} className="p-0.75 object-cover bg-blue-600 rounded-md" />
+            <img
+              src={convertFileSrc(i.item)}
+              className="p-0.75 object-cover bg-blue-600 rounded-md"
+            />
           ) : (
             i.item
           )}

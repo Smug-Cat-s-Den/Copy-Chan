@@ -1,7 +1,7 @@
-use base64::engine::general_purpose;
-use base64::Engine;
+
 use clipboard_listener::listen_clipboard;
 use image::RgbaImage;
+use std::fs;
 use std::io::Cursor;
 use std::sync::atomic::Ordering;
 use tauri::async_runtime;
@@ -10,8 +10,11 @@ use tauri::Emitter;
 use tauri::Manager;
 use tauri_plugin_clipboard_manager::ClipboardExt;
 
+use uuid::Uuid;
+
 use crate::copy::copy::copy_history_add;
 use crate::ClipBoardState;
+use crate::IMAGE_COPY_PATH;
 use enigo::{
     Direction::{Click, Press, Release},
     Enigo, Key, Keyboard, Settings,
@@ -57,9 +60,19 @@ fn parse_into_base64_image(img: Image<'_>) -> Option<String> {
             .is_ok(); // convert the bytes into a compressed png
 
         if converted_png {
-            let base64_img_string = general_purpose::STANDARD.encode(buffer_container.into_inner());
-            let final_img_data_string = format!("data:image/png;base64,{}", base64_img_string);
-            return Some(final_img_data_string);
+            let uuid = Uuid::new_v4();
+            let file_name = format!("copy_{}.png", uuid);
+            let base_path = IMAGE_COPY_PATH
+                .get()
+                .expect("failed to get image copy path");
+            let main_path = base_path.join(file_name);
+
+            let _ = image_bytes
+                .save(&main_path)
+                .map_err(|e| eprintln!("failed to save image (69,cblisten), {}", e));
+            let path_string = main_path.to_string_lossy().to_string();
+            println!("Image path : {}",path_string);
+            return Some(path_string);
         }
     }
     None
@@ -81,10 +94,8 @@ pub fn copy_and_ignore(
         /*
           if image convert the base64 image back to image binary and copy to the clipboard
         */
-        let base64_image_string = item.split(",").nth(1).unwrap_or(&item);
-        let image_bin = general_purpose::STANDARD
-            .decode(base64_image_string)
-            .map_err(|e| e.to_string())?;
+        // let base64_image_string = item.split(",").nth(1).unwrap_or(&item);
+        let image_bin = fs::read(item).map_err(|e| e.to_string())?;
         let image = tauri::image::Image::from_bytes(&image_bin).map_err(|e| {
             format!(
                 "Failed to convert binary to Image (88, cblisten), Error : {}",
@@ -125,11 +136,8 @@ pub fn copy_and_ignore(
  * Emit signal for the UI to render the latest data
  */
 fn emit_clipboard_changed(app_handle: &tauri::AppHandle, data: String, is_image: bool) {
-    let state = app_handle.state::<ClipBoardState>();
-    state.ignore_next.store(true, Ordering::SeqCst);
-
     let _ = app_handle
-        .emit("clipboard-changed", &data)
+        .emit("clipboard-changed", "")
         .map_err(|e| eprintln!("Failed emit clipboard-changed {}", e));
     let _ = copy_history_add(data, is_image)
         .map_err(|e| eprintln!("Failed to add history, Error : {}", e));
@@ -152,9 +160,8 @@ pub fn cblisten(app_handle: tauri::AppHandle) {
             // Image data
             if let Ok(img) = clipboard.read_image() {
                 if let Some(final_image_string) = parse_into_base64_image(img) {
-                    // final_image save to bin
-                    // println!("Final Image string: {}", final_image_string);
                     if !final_image_string.trim().is_empty() {
+                        state.ignore_next.store(true, Ordering::SeqCst);
                         emit_clipboard_changed(&app_handle_clone, final_image_string, true);
                     }
                 }
