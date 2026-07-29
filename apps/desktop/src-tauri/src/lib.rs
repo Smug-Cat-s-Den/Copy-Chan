@@ -94,7 +94,7 @@ fn show_window(app: tauri::AppHandle) {
 #[tauri::command]
 fn show_window_using_shortcut(app: tauri::AppHandle) {
     window_pos(app, true);
-    println!("window will show");
+    // println!("window will show"); //debug
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

@@ -1,7 +1,7 @@
 {
   "name": "copy-chan",
   "private": true,
-  "version": "0.0.9",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "cp -r ../../assets/* ./public/ && vite",
