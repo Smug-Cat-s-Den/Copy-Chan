@@ -37,7 +37,7 @@ const SelectedIcon = ConfiguredIcon ? Icons[ConfiguredIcon] : null;
 >
     <div>
         <a
-            href={Link}
+            href={Link ? Link : ""}
             target={NewTab ? "_blank" : "_self"}
             class="h-full w-full flex items-center gap-1"
         >
