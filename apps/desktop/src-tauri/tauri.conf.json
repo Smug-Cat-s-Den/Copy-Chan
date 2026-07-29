@@ -39,6 +39,7 @@
   },
   "bundle": {
     "active": true,
+    "publisher": "Adi, Smug Cat's",
     "targets": ["nsis", "deb", "rpm", "appimage", "app", "dmg"],
     "resources": ["icons/*"],
     "longDescription": "Your smol :3 and encrypted persistent clipboard manager",
