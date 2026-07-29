@@ -71,7 +71,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: v__VERSION__
-          releaseName: "Preview __VERSION__"
+          releaseName: "__VERSION__"
           releaseBody: "See the assets to download and install this version."
           releaseDraft: true
           args: ${{ matrix.args }}

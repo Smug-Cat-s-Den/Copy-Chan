@@ -109,7 +109,7 @@ pub fn delete_all() -> Result<(), String> {
     let mut history = get_global_history_mutex();
     history.clear();
     save_history(&history).map_err(|e| format!("Failded to Save data {}", e))?;
-    
+
     let base_path = IMAGE_COPY_PATH.get().expect("path not found");
     if base_path.exists() {
         fs::remove_dir_all(base_path).map_err(|e| e.to_string())?;
