@@ -94,13 +94,23 @@ fn show_window(app: tauri::AppHandle) {
 #[tauri::command]
 fn show_window_using_shortcut(app: tauri::AppHandle) {
     window_pos(app, true);
-    println!("window will show");
+    // println!("window will show"); //debug
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     std::env::set_var("GDK_BACKEND", "x11");
     tauri::Builder::default()
+        .plugin(
+            tauri_plugin_log::Builder::new()
+                .level(tauri_plugin_log::log::LevelFilter::Info)
+                .build(),
+        )
+        .plugin(
+            tauri_plugin_log::Builder::new()
+                .level(tauri_plugin_log::log::LevelFilter::Info)
+                .build(),
+        )
         .plugin(tauri_plugin_store::Builder::new().build())
         .manage(ClipBoardState {
             ignore_next: AtomicBool::new(false),
@@ -118,6 +128,15 @@ pub fn run() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::default().build())
         .plugin(tauri_plugin_dialog::init())
+        .plugin(
+            tauri_plugin_log::Builder::new()
+                .target(tauri_plugin_log::Target::new(
+                    tauri_plugin_log::TargetKind::LogDir {
+                        file_name: Some("logs".to_string()),
+                    },
+                ))
+                .build(),
+        )
         .setup(|app_handle| {
             match set_global_data_path(app_handle) {
                 Ok(()) => {}

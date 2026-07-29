@@ -7,7 +7,7 @@ import { setupTray } from "./Utils/systemtray";
 import Settings from "./components/tabs/Settings";
 import { RegisterShortCuts } from "./Utils/RegisterShortcut";
 import EmojiPicker from "./components/tabs/EmojiPicker";
-import { appWindow } from "./Utils/Utils";
+import { AppVersion, appWindow } from "./Utils/Utils";
 
 //Emoji datasets
 import { graphicEmojiArray } from "./EmojiData/Visual";
@@ -59,7 +59,7 @@ function App() {
     <main className="container select-none">
       <Nav ActiveTab={ActiveTab} SetActiveTab={SetActiveTab} />
       <strong className="flex justify-center">{ActiveTab.label}</strong>
-      <div className="content overflow-y-scroll h-84 scroll-smooth mx-1 rounded-2xl">
+      <div className="content overflow-y-scroll h-83 scroll-smooth mx-1 rounded-2xl">
         {ActiveTab.label === "Copy" && <Copy />}
         {ActiveTab.label === "Symbols" && (
           <EmojiPicker title={ActiveTab.label} emotes={symbolEmoticonArray} />
@@ -69,6 +69,11 @@ function App() {
         )}
         {ActiveTab.label === "Settings" && <Settings />}
       </div>
+      {AppVersion.toLocaleLowerCase().includes("preview") && (
+        <div className="h-15 text-right w-full text-[12px] text-gray-400 px-5">
+          preview build {AppVersion.replace("-preview","")} - experimental
+        </div>
+      )}
     </main>
   );
 }
