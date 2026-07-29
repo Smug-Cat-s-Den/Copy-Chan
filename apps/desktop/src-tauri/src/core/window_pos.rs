@@ -1,7 +1,6 @@
 use mouse_position::mouse_position::Mouse;
 use tauri::{AppHandle, Manager, Monitor, PhysicalPosition, WebviewWindow};
 
-
 pub fn window_pos(app: AppHandle, is_shortcut: bool) {
     if let Some(main_window) = app.get_webview_window("main") {
         let pos = Mouse::get_mouse_position();
@@ -24,9 +23,18 @@ pub fn window_pos(app: AppHandle, is_shortcut: bool) {
                         let _ = main_window.set_position(PhysicalPosition::new(x, y_after_padding));
                     } else {
                         let percent_of_w = 0.72; // 72% of weidth
+                        let percent_of_h = 0.55; // 55% of the height
                         let new_x = monitor_pos.x + (monitor_width * percent_of_w) as i32;
-                        let _ =
-                            main_window.set_position(PhysicalPosition::new(new_x, monitor_pos.y + 10));
+                        let optimal_y_padding =
+                            if cfg!(any(target_os = "macos", target_os = "linux")) {
+                                10
+                            } else {
+                                (percent_of_h * monitor_height) as i32
+                            };
+                        let _ = main_window.set_position(PhysicalPosition::new(
+                            new_x,
+                            monitor_pos.y + optimal_y_padding as i32,
+                        ));
                     }
                 }
             }

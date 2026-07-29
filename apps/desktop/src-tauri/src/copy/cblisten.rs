@@ -126,16 +126,9 @@ pub fn copy_and_ignore(
     if let Some(window) = app.get_webview_window("main") {
         window.hide().map_err(|e| e.to_string())?;
     }
-
-    #[cfg(target_os = "macos")]
-    {
-        simulate_paste(true)?;
-    }
-
-    #[cfg(not(target_os = "macos"))]
-    {
-        simulate_paste(false)?;
-    }
+    
+    let is_mac = cfg!(target_os = "macos");
+    simulate_paste(is_mac)?;
 
     Ok(())
 }
