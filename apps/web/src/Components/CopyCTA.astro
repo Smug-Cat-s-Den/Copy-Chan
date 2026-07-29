@@ -1,11 +1,29 @@
 ---
 import { Image } from "astro:assets";
+import { AppName } from "../Utitls/Config";
+import { FaStar } from "react-icons/fa";
+import Btn from "./Btn.astro";
 ---
 
-<div class="flex gap-2 items-center text-md text-white font-mono">
-    <Image src={"/Copychan.png"} alt={"Logo"} width={100} height={100} />
-    <div>
-        <h1 class="text-xl">Copy chan</h1>
-        <p>Your light weight, persistent and encrypted clipboard manager</p>
+<div
+    class="w-full flex justify-start gap-5 items-center text-md text-white font-mono"
+>
+    <Image
+        src={"/Copychan.png"}
+        alt={"Logo"}
+        width={100}
+        height={100}
+        class={"max-md:w-20"}
+    />
+    <div class="w-full">
+        <h1 class="text-xl flex justify-between w-full">
+            <div class="font-bold text-md">
+                {AppName}
+            </div>
+        </h1>
+        <p class="max-md:text-xs">
+            Your light weight, persistent and encrypted clipboard manager that
+            works on Windows, Mac and Linux
+        </p>
     </div>
 </div>

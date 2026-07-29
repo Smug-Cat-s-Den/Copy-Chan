@@ -1,7 +1,12 @@
 ---
-import Btn from "../Components/Btn.astro";
 import CopyCTA from "../Components/CopyCTA.astro";
+import Cover from "../Components/Cover.astro";
+import Footer from "../Components/Footer.astro";
+import Releases from "../Components/Releases.astro";
+import Socials from "../Components/Socials.astro";
 import "../styles/global.css";
+
+//
 ---
 
 <html lang="en">
@@ -13,14 +18,19 @@ import "../styles/global.css";
         <meta name="generator" content={Astro.generator} />
         <title>copychan</title>
     </head>
-    <body>
-        <main class="bg-linear-to-b to-black from-blue-700 h-screen">
+    <body
+        class="bg-linear-to-b to-black from-blue-700  min-h-screen bg-no-repeat"
+    >
+        <main>
             <div class="max-w-3xl w-full h-full mx-auto p-2">
+                <Cover />
                 <div
                     class="w-full h-full flex flex-col justify-center items-center"
                 >
                     <CopyCTA />
-                    <Btn />
+                    <Socials />
+                    <Releases />
+                    <Footer />
                 </div>
             </div>
         </main>
