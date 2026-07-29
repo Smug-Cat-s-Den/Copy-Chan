@@ -1,0 +1,89 @@
+---
+import { IoIosPricetags } from "react-icons/io";
+import { FaDownload } from "react-icons/fa";
+import { AppName, Versions, SupportedOs } from "../Utitls/Config";
+import Btn from "./Btn.astro";
+
+const GetDownloadLink = (Version: string, Extension: string): string => {
+    const {
+        Windows,
+        LinuxDeb,
+        LinuxRpm,
+        LinuxAppImage,
+        LinuxTar,
+        MacArm,
+        MacIntel,
+        MacTar,
+    } = SupportedOs;
+
+    switch (Extension) {
+        case Windows:
+            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_x64-setup.exe`;
+        case LinuxDeb:
+            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_amd64.deb`;
+        case LinuxRpm:
+            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan-${Version}-1.x86_64.rpm`;
+        case LinuxAppImage:
+            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_amd64.AppImage`;
+        case LinuxTar:
+            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_aarch64.app.tar.gz`;
+        case MacArm:
+            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_aarch64.dmg`;
+        case MacIntel:
+            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_x64.dmg`;
+        case MacTar:
+            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_x64.app.tar.gz`;
+        default:
+            return ``;
+    }
+};
+---
+
+<div
+    class="text-white font-mono p-3 rounded-md bg-linear-to-b from-blue-600 from-1% via-blue-600/10 via-30% border-blue-600 border-2"
+>
+    <h1 class="flex gap-1 items-center xl:text-2xl text-xl font-bold">
+        <FaDownload />Install
+    </h1>
+    <h1 class="mt-2 max-md:text-sm">
+        Download the Latest version of {AppName}, it's available for Mac,
+        Windows and Linux. Choose the right version for your OS
+    </h1>
+    <div>
+        {
+            Versions.map((i) => (
+                <div class="flex flex-col justify-start  mt-5 border-t border-blue-600/40">
+                    <span class="flex gap-3 items-center mt-3">
+                        <h1 class="xl:text-sm text-xs p-1 rounded-sm bg-blue-600 flex gap-1 items-center">
+                            <IoIosPricetags />
+                            <a href={i.PatchNotes} target="_blank">
+                                {i.Version.toLocaleLowerCase().includes(
+                                    "preview",
+                                )
+                                    ? "Preview"
+                                    : "Release"}
+                            </a>
+                        </h1>
+                        <h1 class="xl:text-xl text-md">{i.Version}</h1>
+                    </span>
+                    <div />
+                    <h1 class="mt-5 text-md font-bold">Supported Platforms</h1>
+                    <div class="flex flex-wrap gap-3 mt-5">
+                        {Object.entries(SupportedOs).map(([os, label]) => (
+                            <div class="text-xs">
+                                <Btn
+                                    Link={`${GetDownloadLink(i.Version, label)}`}
+                                    NewTab={false}
+                                    Title={os}
+                                    ConfiguredIcon={
+                                        os as keyof typeof SupportedOs
+                                    }
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+</div>

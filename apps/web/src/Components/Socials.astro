@@ -1,0 +1,13 @@
+---
+import { Socials } from "../Utitls/Config";
+import Btn from "./Btn.astro";
+import { FaGithub, FaYoutube } from "react-icons/fa";
+---
+
+<div class="text-white font-mono my-5">
+    <h1>Follow on</h1>
+    <div class="flex gap-2 mt-2">
+        <Btn Link={Socials.Github} Title={""} NewTab={true}><FaGithub /></Btn>
+        <Btn Link={Socials.Youtube} Title={""} NewTab={true}><FaYoutube /></Btn>
+    </div>
+</div>

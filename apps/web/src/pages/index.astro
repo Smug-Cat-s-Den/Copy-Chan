@@ -1,0 +1,38 @@
+---
+import CopyCTA from "../Components/CopyCTA.astro";
+import Cover from "../Components/Cover.astro";
+import Footer from "../Components/Footer.astro";
+import Releases from "../Components/Releases.astro";
+import Socials from "../Components/Socials.astro";
+import "../styles/global.css";
+
+//
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="Copychan.png" />
+        <link rel="icon" href="Copychan.png" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>copychan</title>
+    </head>
+    <body
+        class="bg-linear-to-b to-black from-blue-700  min-h-screen bg-no-repeat"
+    >
+        <main>
+            <div class="max-w-3xl w-full h-full mx-auto p-2">
+                <Cover />
+                <div
+                    class="w-full h-full flex flex-col justify-center items-center"
+                >
+                    <CopyCTA />
+                    <Socials />
+                    <Releases />
+                    <Footer />
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

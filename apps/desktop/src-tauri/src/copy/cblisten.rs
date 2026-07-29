@@ -1,0 +1,190 @@
+use clipboard_listener::listen_clipboard;
+use image::RgbaImage;
+use std::fs;
+use std::hash::DefaultHasher;
+use std::hash::Hash;
+use std::hash::Hasher;
+use std::io::Cursor;
+use std::sync::atomic::Ordering;
+use tauri::async_runtime;
+use tauri::image::Image;
+use tauri::Emitter;
+use tauri::Manager;
+use tauri_plugin_clipboard_manager::ClipboardExt;
+
+use crate::copy::copy::copy_history_add;
+use crate::get_copy_hash;
+use crate::ClipBoardState;
+use crate::IMAGE_COPY_PATH;
+use enigo::{
+    Direction::{Click, Press, Release},
+    Enigo, Key, Keyboard, Settings,
+};
+
+/*
+
+Simulate paste depending on the device
+*/
+fn simulate_paste(is_mac: bool) -> Result<(), String> {
+    let mut enigo = Enigo::new(&Settings::default()).map_err(|e| e.to_string())?;
+    if is_mac {
+        enigo.key(Key::Meta, Press).map_err(|e| e.to_string())?;
+        enigo
+            .key(Key::Unicode('v'), Click)
+            .map_err(|e| e.to_string())?;
+        enigo.key(Key::Meta, Release).map_err(|e| e.to_string())?;
+    } else {
+        enigo.key(Key::Control, Press).map_err(|e| e.to_string())?;
+        enigo
+            .key(Key::Unicode('v'), Click)
+            .map_err(|e| e.to_string())?;
+        enigo
+            .key(Key::Control, Release)
+            .map_err(|e| e.to_string())?;
+    }
+    Ok(())
+}
+
+/*
+Parse Clipboard image
+*/
+fn parse_into_base64_image(img: Image<'_>) -> Option<String> {
+    let image_width = img.width();
+    let image_height = img.height();
+    let image_bytes = img.rgba().to_owned();
+
+    if let Some(image_bytes) = RgbaImage::from_raw(image_width, image_height, image_bytes) {
+        let mut buffer_container = Cursor::new(Vec::<u8>::new());
+        // println!("Image size: {}mb", image_bytes.len() as f64 / 1_048_576.0); // for debuging
+        let converted_png = image_bytes
+            .write_to(&mut buffer_container, image::ImageFormat::Png)
+            .is_ok(); // convert the bytes into a compressed png
+
+        if converted_png {
+            let mut hasher = DefaultHasher::new();
+            // image_bytes.hash(&mut hasher);
+            image_bytes.hash(&mut hasher);
+            let image_hasher = hasher.finish();
+            let file_name = format!("copy_{}.png", image_hasher);
+            let base_path = IMAGE_COPY_PATH
+                .get()
+                .expect("failed to get image copy path");
+            let main_path = base_path.join(file_name);
+
+            if !main_path.exists() {
+                let saved = image_bytes.save(&main_path).is_ok();
+                if !saved {
+                    let _ = fs::create_dir_all(&base_path);
+                    let _ = image_bytes.save(&main_path).map_err(|e| e.to_string());
+                }
+            }
+            let path_string = main_path.to_string_lossy().to_string();
+            // println!("Image path : {}", path_string); // for debuging
+            return Some(path_string);
+        }
+    }
+    None
+}
+
+/*
+Ignore the next write if the global ignore_next state is true
+*/
+#[tauri::command]
+pub fn copy_and_ignore(
+    item: String,
+    is_image: bool,
+    state: tauri::State<'_, ClipBoardState>,
+    app: tauri::AppHandle,
+) -> Result<(), String> {
+    //updates flag to true so that when writing it ignores copy chan's clipbord update
+    state.ignore_next.store(true, Ordering::SeqCst);
+    if is_image {
+        /*
+          if image convert the base64 image back to image binary and copy to the clipboard
+        */
+        // let base64_image_string = item.split(",").nth(1).unwrap_or(&item);
+        let image_bin = fs::read(item).map_err(|e| e.to_string())?;
+        let image = tauri::image::Image::from_bytes(&image_bin).map_err(|e| {
+            format!(
+                "Failed to convert binary to Image (88, cblisten), Error : {}",
+                e.to_string()
+            )
+        })?;
+
+        // write the image to the clipboard
+        app.clipboard()
+            .write_image(&image)
+            .map_err(|e| e.to_string())?;
+    } else {
+        // if not image then write simple text
+        app.clipboard()
+            .write_text(&item)
+            .map_err(|e| e.to_string())?;
+    }
+
+    //hide the window as soon as the write is done
+    if let Some(window) = app.get_webview_window("main") {
+        window.hide().map_err(|e| e.to_string())?;
+    }
+
+    let is_mac = cfg!(target_os = "macos");
+    simulate_paste(is_mac)?;
+
+    Ok(())
+}
+
+/*
+ * Emit signal for the UI to render the latest data
+ */
+
+fn emit_clipboard_changed(app_handle: &tauri::AppHandle, data: String, is_image: bool) {
+    //check if the data already exists in the global hash set
+    let mut copy_hash = get_copy_hash().lock().unwrap();
+    if copy_hash.contains(&data) {
+        return;
+    } else {
+        copy_hash.insert(data.clone());
+    }
+
+    let _ = app_handle
+        .emit("clipboard-changed", "")
+        .map_err(|e| eprintln!("Failed emit clipboard-changed {}", e));
+    let _ = copy_history_add(data, is_image)
+        .map_err(|e| eprintln!("Failed to add history, Error : {}", e));
+}
+
+/*
+    Listen the OS clipboard for any change
+*/
+pub fn cblisten(app_handle: tauri::AppHandle) {
+    let callback = move || {
+        let app_handle_clone = app_handle.clone();
+        async_runtime::spawn(async move {
+            //gatekeep when copied from the app else add them
+            let state = app_handle_clone.state::<ClipBoardState>();
+            if state.ignore_next.load(Ordering::SeqCst) {
+                state.ignore_next.store(false, Ordering::SeqCst);
+                return;
+            }
+            let clipboard = app_handle_clone.clipboard();
+            // Image data
+            if let Ok(img) = clipboard.read_image() {
+                if let Some(final_image_string) = parse_into_base64_image(img) {
+                    if !final_image_string.trim().is_empty() {
+                        // state.ignore_next.store(true, Ordering::SeqCst);
+                        emit_clipboard_changed(&app_handle_clone, final_image_string, true);
+                    }
+                }
+            } else if let Ok(text) = clipboard.read_text() {
+                // Text data
+                if !text.trim().is_empty() {
+                    emit_clipboard_changed(&app_handle_clone, text, false);
+                }
+            }
+        });
+    };
+
+    if let Err(e) = listen_clipboard(Box::new(callback)) {
+        eprintln!("Clipboard listener error: {:?}", e);
+    }
+}
