@@ -70,7 +70,7 @@ const Settings = () => {
       </section>
       <section className="mt-3 bg-blue-600/20 p-3 rounded-md ">
         <div className="flex justify-between  items-center">
-          <h1>Quick access CopyChan</h1>
+          <h1 className="font-semibold">Quick access</h1>
           <RecordKeyBind
             Id={keybinds.QuickAccess.id}
             DefaultKeyBind={QuickAccesShortcut}
