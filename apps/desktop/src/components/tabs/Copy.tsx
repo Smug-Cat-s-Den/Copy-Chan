@@ -6,7 +6,6 @@ import { HandleCopy } from "../../Utils/Utils";
 import Records from "../Records";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { ask } from "@tauri-apps/plugin-dialog";
-import { TbPinned } from "react-icons/tb";
 import { IoIosArrowDown } from "react-icons/io";
 
 const Copy = () => {

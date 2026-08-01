@@ -101,7 +101,6 @@ fn show_window_using_shortcut(app: tauri::AppHandle) {
 pub fn run() {
     std::env::set_var("GDK_BACKEND", "x11");
     std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
-    //WEBKIT_DISABLE_COMPOSITING_MODE=1 add
     tauri::Builder::default()
         .plugin(
             tauri_plugin_log::Builder::new()
@@ -130,15 +129,6 @@ pub fn run() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::default().build())
         .plugin(tauri_plugin_dialog::init())
-        .plugin(
-            tauri_plugin_log::Builder::new()
-                .target(tauri_plugin_log::Target::new(
-                    tauri_plugin_log::TargetKind::LogDir {
-                        file_name: Some("logs".to_string()),
-                    },
-                ))
-                .build(),
-        )
         .setup(|app_handle| {
             match set_global_data_path(app_handle) {
                 Ok(()) => {}

@@ -45,7 +45,6 @@ tauri-plugin-store = "2"
 enigo = "0.6.1"
 image = "0.25.10"
 base64 = "0.23.0"
-tauri-plugin-log = "2"
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.
