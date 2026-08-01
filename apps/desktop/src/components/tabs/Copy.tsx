@@ -13,7 +13,7 @@ const Copy = () => {
   const [Pinned, setPinned] = useState<history[]>([]);
   const [FocusIndex, setFocusIndex] = useState<number>(0);
   const recordElementsRef = useRef<Map<string, HTMLButtonElement>>(new Map());
-  const [ShowPinned, setShowPinned] = useState<boolean>(false);
+  const [ShowPinned, setShowPinned] = useState<boolean>(true);
 
   async function FetchHistory() {
     let history: history[] = await invoke("get_history");
@@ -117,16 +117,18 @@ const Copy = () => {
         </div>
       )}
       {Pinned.length > 0 && (
-        <div className="flex items-center justify-start px-2 mt-5 relative z-10 w-full">
+        <button
+          className="flex items-center justify-start px-2 mt-5 relative z-10 w-full outline-0"
+          onClick={() => setShowPinned(!ShowPinned)}
+        >
           <h1 className="flex items-center gap-2">
             <IoIosArrowDown
               size={18}
               className={`${ShowPinned ? "rotate-180" : "rotate-0"} transition duration-300 ease-in-out`}
-              onClick={() => setShowPinned(!ShowPinned)}
             />
             Pinned ({Pinned.length})
           </h1>
-        </div>
+        </button>
       )}
       <div className={`${ShowPinned ? "block" : "hidden"} transition duration-300 ease-in-out`}>
         {Pinned.length > 0 && (

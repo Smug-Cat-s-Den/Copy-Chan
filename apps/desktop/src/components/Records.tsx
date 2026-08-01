@@ -14,9 +14,12 @@ interface props {
 const Records = forwardRef<HTMLButtonElement, props>(
   ({ i, HandleCopy, PinHistory, removeHistory }: props, ref) => {
     const [RetryCount, setRetryCount] = useState(0);
+    // const [isLoaded, setLoaded] = useState(false);
     const HandleError = (path: String) => {
       if (RetryCount < 10) {
-        setRetryCount((prev) => prev + 1);
+        setTimeout(() => {
+          setRetryCount((prev) => prev + 1);
+        }, 200);
       } else {
         console.error(`Failed to fetch path: ${path}`);
       }
@@ -31,11 +34,12 @@ const Records = forwardRef<HTMLButtonElement, props>(
         >
           {i.is_image ? (
             <img
-              src={`${convertFileSrc(i.item.trim())}?=${RetryCount}`}
-              alt={i.item.slice(0, -10)}
+              key={`${i.id}-${RetryCount}`}
+              src={`${convertFileSrc(i.item.trim())}?t=${RetryCount}`}
+              // alt={``}
               onLoad={() => setRetryCount(0)}
               onError={() => HandleError(i.item)}
-              className="p-0.75 object-cover bg-blue-600 rounded-md"
+              className="p-0.75 object-cover bg-blue-600 rounded-md min-h-full min-w-full"
             />
           ) : (
             i.item

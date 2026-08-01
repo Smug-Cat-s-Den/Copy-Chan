@@ -3,7 +3,7 @@ import "./App.css";
 import Copy from "./components/tabs/Copy";
 import { TabItem } from "./types/app.types";
 import Nav from "./components/nav/Nav";
-import { setupTray } from "./Utils/systemtray";
+import { SetupTray } from "./Utils/Systemtray";
 import Settings from "./components/tabs/Settings";
 import { RegisterShortCuts } from "./Utils/RegisterShortcut";
 import EmojiPicker from "./components/tabs/EmojiPicker";
@@ -19,7 +19,7 @@ function App() {
    * Initial Setup
    */
   useEffect(() => {
-    setupTray();
+    SetupTray();
     RegisterShortCuts();
   }, []);
 
@@ -71,7 +71,7 @@ function App() {
       </div>
       {AppVersion.toLocaleLowerCase().includes("preview") && (
         <div className="h-15 text-right w-full text-[12px] text-gray-400 px-5">
-          preview build {AppVersion.replace("-preview","")} - experimental
+          preview build {AppVersion.replace("-preview", "")} - experimental
         </div>
       )}
     </main>
