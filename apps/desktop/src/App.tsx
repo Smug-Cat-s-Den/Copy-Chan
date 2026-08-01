@@ -39,7 +39,7 @@ function App() {
         if (!focused) {
           FocusTimeout = setTimeout(async () => {
             await appWindow.hide();
-          }, 50);
+          }, 150);
         }
       });
     };

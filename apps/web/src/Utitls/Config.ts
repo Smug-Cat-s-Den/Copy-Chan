@@ -36,3 +36,4 @@ export const Versions: VersionsType[] = [
     PatchNotes: "https://github.com/Smug-Cat-s-Den/Copy-Chan/issues/36",
   },
 ];
+

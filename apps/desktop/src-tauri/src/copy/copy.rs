@@ -42,7 +42,11 @@ pub fn copy_history_add(content: String, is_image: bool) -> Result<(), String> {
     let mut history = get_global_history_mutex();
     history.insert(0, new_item);
     if history.len() > *get_max_entries_mutex() {
-        history.truncate(*get_max_entries_mutex());
+        let last = history.remove(*get_max_entries_mutex());
+        // println!("{:?}", last);
+        if last.is_image {
+            delete_file(Some(last.item))?;
+        }
     }
     save_history(&history).map_err(|e| format!("Failded to Save data {}", e))?;
     Ok(())
@@ -83,12 +87,10 @@ pub fn pin_history(id: Uuid) -> Result<(), String> {
 pub fn del_entry(id: String, content: Option<String>, is_image: bool) -> Result<(), String> {
     if is_image {
         //del the file
-        if let Some(content) = content {
-            let _ = fs::remove_file(&content).map_err(|e| e.to_string())?;
-        }
+        delete_file(content)?;
     }
     let target_uuid =
-        Uuid::parse_str(&id).map_err(|e| format!("Invalid uuid for deletion: {}", e))?;
+        Uuid::parse_str(&id.trim()).map_err(|e| format!("Invalid uuid for deletion: {}", e))?;
 
     let mut history = get_global_history_mutex();
     let target_index = history.iter().position(|entry| entry.id == target_uuid);
@@ -101,6 +103,14 @@ pub fn del_entry(id: String, content: Option<String>, is_image: bool) -> Result<
         }
         None => Err("Element not found".to_string()),
     }
+}
+
+//delete image file
+fn delete_file(path: Option<String>) -> Result<(), String> {
+    if let Some(path) = path {
+        fs::remove_file(&path).map_err(|e| e.to_string())?;
+    }
+    Ok(())
 }
 
 //Delete all

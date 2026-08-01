@@ -100,6 +100,8 @@ fn show_window_using_shortcut(app: tauri::AppHandle) {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     std::env::set_var("GDK_BACKEND", "x11");
+    std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
+    //WEBKIT_DISABLE_COMPOSITING_MODE=1 add
     tauri::Builder::default()
         .plugin(
             tauri_plugin_log::Builder::new()
