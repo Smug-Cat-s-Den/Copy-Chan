@@ -101,7 +101,7 @@ const Copy = () => {
   }, [FocusIndex, Pinned, History]);
 
   return (
-    <main className="relative mr-1 rounded-2xl animate-fade-up">
+    <main className="relative mr-1 rounded-2xl">
       {History.length > 0 && (
         <div className="flex justify-end mx-2 sticky top-2">
           <button
@@ -118,7 +118,7 @@ const Copy = () => {
       )}
       {Pinned.length > 0 && (
         <button
-          className="flex items-center justify-start px-2 mt-5 relative z-10 w-full outline-0"
+          className="flex items-center justify-start px-2 mt-5 relative z-10 w-full outline-0 text-gray-300"
           onClick={() => setShowPinned(!ShowPinned)}
         >
           <h1 className="flex items-center gap-2">
@@ -130,11 +130,38 @@ const Copy = () => {
           </h1>
         </button>
       )}
-      <div className={`${ShowPinned ? "block" : "hidden"} transition duration-300 ease-in-out`}>
-        {Pinned.length > 0 && (
-          <div>
-            {Pinned.map((item, index) => (
+      <div className="animate-fade-up">
+        <div className={`${ShowPinned ? "block" : "hidden"} transition duration-300 ease-in-out`}>
+          {Pinned.length > 0 && (
+            <div>
+              {Pinned.map((item, index) => (
+                <Records
+                  ref={(el: HTMLButtonElement | null) => {
+                    if (el) {
+                      recordElementsRef.current.set(item.id, el);
+                    } else {
+                      recordElementsRef.current.delete(item.id);
+                    }
+                  }}
+                  key={item.id}
+                  i={item}
+                  index={index}
+                  HandleCopy={HandleCopy}
+                  PinHistory={PinHistory}
+                  removeHistory={(id) => removeHistory(id, item.item, item.is_image)}
+                />
+              ))}
+              <h1 className="flex justify-center border-b border-blue-600 mx-2 pb-4" />
+            </div>
+          )}
+        </div>
+
+        <div className="mt-5">
+          {History.length !== 0 ? (
+            History.map((item, index) => (
               <Records
+                key={item.id}
+                i={item}
                 ref={(el: HTMLButtonElement | null) => {
                   if (el) {
                     recordElementsRef.current.set(item.id, el);
@@ -142,41 +169,16 @@ const Copy = () => {
                     recordElementsRef.current.delete(item.id);
                   }
                 }}
-                key={item.id}
-                i={item}
                 index={index}
                 HandleCopy={HandleCopy}
-                PinHistory={PinHistory}
                 removeHistory={(id) => removeHistory(id, item.item, item.is_image)}
+                PinHistory={PinHistory}
               />
-            ))}
-            <h1 className="flex justify-center border-b border-blue-600 mx-2 pb-4" />
-          </div>
-        )}
-      </div>
-
-      <div className="mt-5">
-        {History.length !== 0 ? (
-          History.map((item, index) => (
-            <Records
-              key={item.id}
-              i={item}
-              ref={(el: HTMLButtonElement | null) => {
-                if (el) {
-                  recordElementsRef.current.set(item.id, el);
-                } else {
-                  recordElementsRef.current.delete(item.id);
-                }
-              }}
-              index={index}
-              HandleCopy={HandleCopy}
-              removeHistory={(id) => removeHistory(id, item.item, item.is_image)}
-              PinHistory={PinHistory}
-            />
-          ))
-        ) : (
-          <span className="flex justify-center mt-3 ml-3">maybe copy something :3</span>
-        )}
+            ))
+          ) : (
+            <span className="flex justify-center mt-3 ml-3">maybe copy something :3</span>
+          )}
+        </div>
       </div>
     </main>
   );

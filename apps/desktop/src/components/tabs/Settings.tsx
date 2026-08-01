@@ -61,7 +61,7 @@ const Settings = () => {
     <main className="px-3 animate-fade-in">
       <section className="bg-blue-600/20 p-3 rounded-md">
         <div className="flex justify-between items-center">
-          <strong>Enable StartUp</strong>
+          <span className="font-semibold">Enable StartUp</span>
           <SliderButton value={isStartUpEnabled} SetValue={SetStartUp} DoSomthing={HandleStartUp} />
         </div>
         <p className="text-[13px] mt-3  text-gray-300">
@@ -104,7 +104,8 @@ const Settings = () => {
           </div>
         </div>
         <p className="text-[13px] mt-3  text-gray-300">
-          Edit the maximum number of entries to record before starting to overwrite. The maximum limit is 100
+          Edit the maximum number of entries to record before starting to overwrite. The maximum
+          limit is 100
         </p>
       </section>
       <section className="mt-3 bg-blue-600/20 p-3 rounded-md">
