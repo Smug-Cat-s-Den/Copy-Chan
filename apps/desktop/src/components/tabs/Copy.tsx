@@ -6,12 +6,15 @@ import { HandleCopy } from "../../Utils/Utils";
 import Records from "../Records";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { ask } from "@tauri-apps/plugin-dialog";
+import { TbPinned } from "react-icons/tb";
+import { IoIosArrowDown } from "react-icons/io";
 
 const Copy = () => {
   const [History, setHistory] = useState<history[]>([]);
   const [Pinned, setPinned] = useState<history[]>([]);
   const [FocusIndex, setFocusIndex] = useState<number>(0);
   const recordElementsRef = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const [ShowPinned, setShowPinned] = useState<boolean>(false);
 
   async function FetchHistory() {
     let history: history[] = await invoke("get_history");
@@ -114,29 +117,42 @@ const Copy = () => {
           </button>
         </div>
       )}
-
       {Pinned.length > 0 && (
-        <div>
-          {Pinned.map((item, index) => (
-            <Records
-              ref={(el: HTMLButtonElement | null) => {
-                if (el) {
-                  recordElementsRef.current.set(item.id, el);
-                } else {
-                  recordElementsRef.current.delete(item.id);
-                }
-              }}
-              key={item.id}
-              i={item}
-              index={index}
-              HandleCopy={HandleCopy}
-              PinHistory={PinHistory}
-              removeHistory={(id) => removeHistory(id, item.item, item.is_image)}
+        <div className="flex items-center justify-start px-2 mt-5 relative z-10 w-full">
+          <h1 className="flex items-center gap-2">
+            <IoIosArrowDown
+              size={18}
+              className={`${ShowPinned ? "rotate-180" : "rotate-0"} transition duration-300 ease-in-out`}
+              onClick={() => setShowPinned(!ShowPinned)}
             />
-          ))}
-          <h1 className="flex justify-center border-b border-blue-600 mx-2 pb-4" />
+            Pinned ({Pinned.length})
+          </h1>
         </div>
       )}
+      <div className={`${ShowPinned ? "block" : "hidden"} transition duration-300 ease-in-out`}>
+        {Pinned.length > 0 && (
+          <div>
+            {Pinned.map((item, index) => (
+              <Records
+                ref={(el: HTMLButtonElement | null) => {
+                  if (el) {
+                    recordElementsRef.current.set(item.id, el);
+                  } else {
+                    recordElementsRef.current.delete(item.id);
+                  }
+                }}
+                key={item.id}
+                i={item}
+                index={index}
+                HandleCopy={HandleCopy}
+                PinHistory={PinHistory}
+                removeHistory={(id) => removeHistory(id, item.item, item.is_image)}
+              />
+            ))}
+            <h1 className="flex justify-center border-b border-blue-600 mx-2 pb-4" />
+          </div>
+        )}
+      </div>
 
       <div className="mt-5">
         {History.length !== 0 ? (

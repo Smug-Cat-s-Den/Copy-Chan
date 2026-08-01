@@ -97,7 +97,7 @@ pub fn del_entry(id: String, content: Option<String>, is_image: bool) -> Result<
     match target_index {
         Some(target_index) => {
             let removed_item = history.remove(target_index);
-            println!("Entry with id: {} deleted.", removed_item.id);
+            // println!("Entry with id: {} deleted.", removed_item.id); //debug
             save_history(&history).map_err(|e| format!("Failded to Save data {}", e))?;
             Ok(())
         }
