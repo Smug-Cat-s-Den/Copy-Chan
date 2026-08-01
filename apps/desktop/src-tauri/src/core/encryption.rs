@@ -51,7 +51,7 @@ pub fn encrypt_data(data: String) -> Result<Vec<u8>, String> {
 
     let key = Key::<Aes256Gcm>::from(key_bytes);
     let cipher = Aes256Gcm::new(&key);
-    
+
     let mut nonce_bytes = [0u8; 12];
     rand::rng().fill(&mut nonce_bytes);
     let nonce = Nonce::from(nonce_bytes);

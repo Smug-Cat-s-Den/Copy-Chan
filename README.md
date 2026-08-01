@@ -1,9 +1,9 @@
-# copy-chan — smol clipboard manager :3 
-<br>![Copy Chan](assets/Copychan.png)
+
+![Alt Text](assets/Copychan.png)
+
+# **copy-chan — smol clipboard manager :3**
 
 ![Alt Text](.github/app.gif)
-
-# **What is copy-chan**
 
 **copy-chan** is a cross-platform clipboard manager with an emoji and symbols picker, built with **Tauri**.
 copy-chan aims to be a **privacy-respecting**, **persisting** clipboard manager for Windows, Mac and Linux platforms with features such as:
@@ -39,8 +39,8 @@ This application relies on a system **keyring daemon to securely encrypt your sa
   - **Hyprland / Sway / i3 Users:** Make sure your PAM module unlocks `gnome-keyring` or `kwallet` on startup ([Secret Service Guide](https://wiki.archlinux.org/title/Freedesktop.org_Secret_Service)).
 
 ## **Install**
-you can find the latest version of copy-chan and it's preview versions in the [release](https://github.com/Smug-Cat-s-Den/Copy-Chan/releases) tab or the website [copy-chan](https://copychan.smgcat.site)
 
+you can find the latest version of copy-chan and it's preview versions in the [release](https://github.com/Smug-Cat-s-Den/Copy-Chan/releases) tab or the website [copy-chan](https://copychan.smgcat.site)
 
 ## **Tech stack**
 
@@ -73,11 +73,13 @@ git clone --filter=blob:none --sparse https://github.com/Smug-Cat-s-Den/Copy-Cha
 ```
 
 install dependencies and start development with Tauri
+
 ```py
 pnpm dev:desktop
 ```
 
 then build native packages with the Tauri
+
 ```py
 pnpm build:desktop
 ```
