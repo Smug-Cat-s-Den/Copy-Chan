@@ -1,9 +1,9 @@
-# copy-chan — smol clipboard manager :3 <br>![Copy Chan](assets/Copychan.png)
+# copy-chan — smol clipboard manager :3 
+<br>![Copy Chan](assets/Copychan.png)
 
-<video src=".github/app.mp4" autoplay loop muted playsinline width="100%">
-</video>
+![Alt Text](.github/app.gif)
 
-## 🔎 What is copy-chan
+# **What is copy-chan**
 
 **copy-chan** is a cross-platform clipboard manager with an emoji and symbols picker, built with **Tauri**.
 copy-chan aims to be a **privacy-respecting**, **persisting** clipboard manager for Windows, Mac and Linux platforms with features such as:
@@ -38,7 +38,11 @@ This application relies on a system **keyring daemon to securely encrypt your sa
   - **KDE Plasma:** Ensure `kwallet` is active ([Setup Guide](https://docs.kde.org/stable5/en/kde-cli-tools/kcontrol5/kwallet5/index.html)).
   - **Hyprland / Sway / i3 Users:** Make sure your PAM module unlocks `gnome-keyring` or `kwallet` on startup ([Secret Service Guide](https://wiki.archlinux.org/title/Freedesktop.org_Secret_Service)).
 
-## 🧭 Tech stack
+## **Install**
+you can find the latest version of copy-chan and it's preview versions in the [release](https://github.com/Smug-Cat-s-Den/Copy-Chan/releases) tab or the website [copy-chan](https://copychan.smgcat.site)
+
+
+## **Tech stack**
 
 - **Frontend :** React + TypeScript + Vite
 - **Styling :** Tailwind CSS
@@ -68,14 +72,12 @@ To run the Tauri desktop build/dev mode (desktop + Rust backend) you can use the
 git clone --filter=blob:none --sparse https://github.com/Smug-Cat-s-Den/Copy-Chan.git && cd Copy-Chan && git sparse-checkout add apps/desktop assets && pnpm i
 ```
 
+install dependencies and start development with Tauri
 ```py
-# install dependencies and start development with Tauri
 pnpm dev:desktop
 ```
 
-To build production packages:
-
+then build native packages with the Tauri
 ```py
-# then build native packages with the Tauri CLI
 pnpm build:desktop
 ```
