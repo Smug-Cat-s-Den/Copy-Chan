@@ -917,7 +917,7 @@ dependencies = [
 
 [[package]]
 name = "copy-chan"
-version = "0.1.0-preview.8042026"
+version = "1.0.0"
 dependencies = [
  "aes-gcm",
  "arboard",

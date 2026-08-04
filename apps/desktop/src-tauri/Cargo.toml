@@ -1,6 +1,6 @@
 [package]
 name = "copy-chan"
-version = "0.1.0-preview.8042026"
+version = "1.0.0"
 description = "Your smol :3 and encrypted persistent clipboard manager"
 authors = ["Adi, Smug Cat's"]
 edition = "2021"
@@ -23,7 +23,7 @@ tauri = { version = "2.9.5", features = [
     "protocol-asset",
     "tray-icon",
     "image-png",
-    "devtools"
+    # "devtools"
 ] }
 tauri-plugin-opener = "2.5.3"
 serde = { version = "1", features = ["derive"] }
