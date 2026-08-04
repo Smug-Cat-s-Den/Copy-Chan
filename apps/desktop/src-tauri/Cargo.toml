@@ -1,6 +1,6 @@
 [package]
 name = "copy-chan"
-version = "0.1.0-preview.8012026"
+version = "0.1.0-preview.8042026"
 description = "Your smol :3 and encrypted persistent clipboard manager"
 authors = ["Adi, Smug Cat's"]
 edition = "2021"
@@ -46,6 +46,7 @@ enigo = "0.6.1"
 image = "0.25.10"
 base64 = "0.23.0"
 tauri-plugin-log = "2"
+arboard = { version = "3.6.1", features = ["wayland-data-control"] }
 
 
 [profile.dev]

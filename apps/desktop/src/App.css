@@ -1,8 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 @import "tailwindcss";
 /* Keep the page font fallback and small reset, but let Tailwind handle layout and colors */
 :root {
-  font-family: "DM Sans", Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, Avenir, sans-serif;
 }
 
 button {

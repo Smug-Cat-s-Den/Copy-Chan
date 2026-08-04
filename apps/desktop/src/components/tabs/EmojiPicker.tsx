@@ -41,12 +41,12 @@ const EmojiPicker = ({ emotes, title }: props) => {
 
   return (
     <main className="mt-2 mx-2 relative">
-      <nav className="sticky top-0 z-10">
-        <SearchBox Searchdata={emotes} SetFiltered={SetFiltered} />
-        <div className="h-3 dark:dark:bg-blue-900 bg-white" />
-      </nav>
       <div>
         <div className="h-70">
+          <nav className="sticky top-0 z-10">
+            <SearchBox Searchdata={emotes} SetFiltered={SetFiltered} />
+            <div className="h-3 dark:dark:bg-blue-900 bg-white" />
+          </nav>
           {/*needed wrapper for virualization*/}
           {Filtered.length > 0 && symbol ? (
             <Virtuoso
@@ -69,7 +69,7 @@ const EmojiPicker = ({ emotes, title }: props) => {
               )}
             />
           ) : (
-            <div className="mt-1 flex justify-center">found nothing in {title} :(</div>
+            <div className="mt-1 flex justify-center text-gray-400">found nothing in {title} :(</div>
           )}
         </div>
       </div>

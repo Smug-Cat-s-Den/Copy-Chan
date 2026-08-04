@@ -917,9 +917,10 @@ dependencies = [
 
 [[package]]
 name = "copy-chan"
-version = "0.1.0-preview.8012026"
+version = "0.1.0-preview.8042026"
 dependencies = [
  "aes-gcm",
+ "arboard",
  "base64 0.23.0",
  "chrono",
  "clipboard_listener",

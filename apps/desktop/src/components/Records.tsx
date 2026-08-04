@@ -45,7 +45,7 @@ const Records = forwardRef<HTMLButtonElement, props>(
             i.item
           )}
         </button>
-        <div className="flex flex-col items-center gap-4 mt-2 h-20">
+        <div className="flex flex-col items-center relative z-1 gap-4 mt-2 h-20">
           <button className="h-fit rounded-md" onClick={() => PinHistory(i.id)}>
             <VscPinned
               size={i.pinned ? 25 : 20}

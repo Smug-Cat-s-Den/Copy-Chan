@@ -107,11 +107,6 @@ pub fn run() {
                 .level(tauri_plugin_log::log::LevelFilter::Info)
                 .build(),
         )
-        .plugin(
-            tauri_plugin_log::Builder::new()
-                .level(tauri_plugin_log::log::LevelFilter::Info)
-                .build(),
-        )
         .plugin(tauri_plugin_store::Builder::new().build())
         .manage(ClipBoardState {
             ignore_next: AtomicBool::new(false),
@@ -130,12 +125,7 @@ pub fn run() {
         .plugin(tauri_plugin_global_shortcut::Builder::default().build())
         .plugin(tauri_plugin_dialog::init())
         .setup(|app_handle| {
-            match set_global_data_path(app_handle) {
-                Ok(()) => {}
-                Err(e) => {
-                    eprintln!("error setting up global path : {}", e)
-                }
-            };
+            set_global_data_path(app_handle).map_err(|e| e)?;
             load_history().map_err(|e| e.to_string())?;
             listen_to_clipbord(app_handle);
             setup_config(app_handle)?;
