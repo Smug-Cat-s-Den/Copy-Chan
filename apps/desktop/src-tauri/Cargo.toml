@@ -1,6 +1,6 @@
 [package]
 name = "copy-chan"
-version = "1.0.0"
+version = "1.0.805"
 description = "Your smol :3 and encrypted persistent clipboard manager"
 authors = ["Adi, Smug Cat's"]
 edition = "2021"

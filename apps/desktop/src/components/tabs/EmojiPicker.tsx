@@ -38,13 +38,14 @@ const EmojiItem = memo(({ index, i }: ElementProps) => {
 const EmojiPicker = ({ emotes, title }: props) => {
   const [Filtered, SetFiltered] = useState<Emojies[]>(emotes);
   const symbol = useMemo(() => ParseAndGroupEmoji(Filtered), [Filtered]);
+  const [HoverName, setHoverName] = useState("");
 
   return (
     <main className="mt-2 mx-2 relative">
       <div>
         <div className="h-70">
           <nav className="sticky top-0 z-10">
-            <SearchBox Searchdata={emotes} SetFiltered={SetFiltered} />
+            <SearchBox HoverName={HoverName} Searchdata={emotes} SetFiltered={SetFiltered} />
             <div className="h-3 dark:dark:bg-blue-900 bg-white" />
           </nav>
           {/*needed wrapper for virualization*/}
@@ -57,19 +58,26 @@ const EmojiPicker = ({ emotes, title }: props) => {
                 <div key={sections} className="animate-fade-up">
                   <h1 className="text-xs m-1 mt-5 text-gray-400">{sections}</h1>
                   <div
-                    className={`animate-fade-in  ${
-                      sections === "Quaso" ? "grid grid-cols-5 text-[10px]" : "grid grid-cols-7"
+                    className={`animate-fade-in grid ${
+                      sections === "ASCII Big" ? "grid-cols-3 text-[10px]" : sections === "Patterns" ? "grid-cols-2" : "grid-cols-7"
                     } grid-rows-1 gap-2`}
                   >
                     {items.map((i, index) => (
-                      <EmojiItem i={i} index={index} sections={sections} key={index} />
+                      <div
+                        onMouseEnter={() => setHoverName(i.label)}
+                        onMouseLeave={() => setHoverName("")}
+                      >
+                        <EmojiItem i={i} index={index} sections={sections} key={index} />
+                      </div>
                     ))}
                   </div>
                 </div>
               )}
             />
           ) : (
-            <div className="mt-1 flex justify-center text-gray-400">found nothing in {title} :(</div>
+            <div className="mt-1 flex justify-center text-gray-400">
+              found nothing in {title} :(
+            </div>
           )}
         </div>
       </div>

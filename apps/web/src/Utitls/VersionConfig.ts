@@ -6,8 +6,13 @@ export interface VersionsType {
 
 export const Versions: VersionsType[] = [
   {
-    Version: "0.1.0-preview.7292026",
-    Date: "29th Jul 2026",
+    Version: "1.0.805",
+    Date: "5th Aug 2026",
+    PatchNotes: "https://github.com/Smug-Cat-s-Den/Copy-Chan/issues/57",
+  },
+  {
+    Version: "0.1.0-preview.8012026",
+    Date: "2nd Aug 2026",
     PatchNotes: "https://github.com/Smug-Cat-s-Den/Copy-Chan/issues/57",
   },
   {
