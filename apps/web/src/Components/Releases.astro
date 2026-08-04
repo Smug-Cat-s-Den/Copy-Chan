@@ -1,57 +1,47 @@
 ---
+import { MdNewReleases } from "react-icons/md";
 import { IoIosPricetags } from "react-icons/io";
 import { FaDownload } from "react-icons/fa";
-import { AppName, Versions, SupportedOs } from "../Utitls/Config";
+import {
+    AppName,
+    SupportedOs,
+    type AllSupportedOS,
+    type SupportedOsType,
+} from "../Utitls/Config";
+import { Versions } from "../Utitls/VersionConfig";
 import Btn from "./Btn.astro";
 
-const GetDownloadLink = (Version: string, Extension: string): string => {
-    const {
-        Windows,
-        LinuxDeb,
-        LinuxRpm,
-        LinuxAppImage,
-        LinuxTar,
-        MacArm,
-        MacIntel,
-        MacTar,
-    } = SupportedOs;
+type SupportedOsEntries = [
+    keyof SupportedOsType,
+    SupportedOsType[keyof SupportedOsType],
+][];
 
-    switch (Extension) {
-        case Windows:
-            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_x64-setup.exe`;
-        case LinuxDeb:
-            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_amd64.deb`;
-        case LinuxRpm:
-            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan-${Version}-1.x86_64.rpm`;
-        case LinuxAppImage:
-            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_amd64.AppImage`;
-        case LinuxTar:
-            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_aarch64.app.tar.gz`;
-        case MacArm:
-            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_aarch64.dmg`;
-        case MacIntel:
-            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_x64.dmg`;
-        case MacTar:
-            return `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}/copy-chan_${Version}_x64.app.tar.gz`;
-        default:
-            return ``;
-    }
+const GetFullLink = (Version: string, Os: string): string => {
+    const Base = `https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/download/v${Version}`;
+    return `${Base}/${Os}`;
+};
+
+const GetValidTag = (V: string): string => {
+    return V.toLocaleLowerCase().includes("preview") ? "Preview" : "Release";
 };
 ---
 
 <div
+    id="Install"
     class="text-white font-mono p-3 rounded-md bg-linear-to-b from-blue-600 from-1% via-blue-600/10 via-30% border-blue-600 border-2"
 >
-    <h1 class="flex gap-1 items-center xl:text-2xl text-xl font-bold">
-        <FaDownload />Install
-    </h1>
-    <h1 class="mt-2 max-md:text-sm">
-        Download the Latest version of {AppName}, it's available for Mac,
-        Windows and Linux. Choose the right version for your OS
-    </h1>
+    <div class="px-2">
+        <h1 class="flex gap-1 items-center xl:text-2xl text-xl font-bold">
+            <FaDownload />Install
+        </h1>
+        <h1 class="mt-2 max-md:text-sm text-blue-200/90">
+            Download the Latest version of {AppName}, it's available for Mac,
+            Windows and Linux. Choose the right version for your OS
+        </h1>
+    </div>
     <div>
         {
-            Versions.map((i) => (
+            Versions.map((i, index) => (
                 <div class="flex flex-col justify-start  mt-5 border-t border-blue-600/40">
                     <span class="flex gap-3 items-center mt-3">
                         <a
@@ -59,30 +49,47 @@ const GetDownloadLink = (Version: string, Extension: string): string => {
                             target="_blank"
                             class="flex gap-2 hover:cursor-pointer"
                         >
-                            <h1 class="xl:text-sm text-xs p-1 rounded-sm bg-blue-600  hover:bg-blue-700 flex gap-1 items-center">
-                                <IoIosPricetags />
-                                {i.Version.toLocaleLowerCase().includes(
-                                    "preview",
-                                )
-                                    ? "Preview"
-                                    : "Release"}
-                            </h1>
-                            <h1 class="xl:text-xl text-md">{i.Version}</h1>
+                            <div class="xl:text-sm text-xs p-1 rounded-sm bg-blue-600  hover:bg-blue-700">
+                                {index === 0 ? (
+                                    <span class="flex items-center gap-1">
+                                        <MdNewReleases />
+                                        Latest
+                                    </span>
+                                ) : (
+                                    <span class="flex items-center gap-1">
+                                        <IoIosPricetags />
+                                        {GetValidTag(i.Version)}
+                                    </span>
+                                )}
+                            </div>
+                            <h1 class="xl:text-xl text-md">v{i.Version}</h1>
                         </a>
                     </span>
                     <div />
                     <h1 class="mt-5 text-md font-bold">Supported Platforms</h1>
-                    <div class="flex flex-wrap gap-3 mt-5">
-                        {Object.entries(SupportedOs).map(([os, label]) => (
-                            <div class="text-xs">
-                                <Btn
-                                    Link={`${GetDownloadLink(i.Version, label)}`}
-                                    NewTab={false}
-                                    Title={os}
-                                    ConfiguredIcon={
-                                        os as keyof typeof SupportedOs
-                                    }
-                                />
+                    <div class="grid gap-5 2xl:grid-cols-3 mt-5 w-full">
+                        {(
+                            Object.entries(SupportedOs) as SupportedOsEntries
+                        ).map(([OsType, Downloadable]) => (
+                            <div class="text-xs border border-blue-700/90  bg-blue-800/50 rounded-md pb-3">
+                                <h1 class="pt-2 text-lg 2xl:text-xl text-center bg-linear-to-br from-blue-400 to-blue-600/70 m-2 rounded-tr-md rounded-tl-md">
+                                    {OsType}
+                                </h1>
+                                <div class="border border-b border-blue-700/90 mb-2 rounded-md" />
+                                <div class="flex flex-col gap-2 w-full h-1/2 px-2 ">
+                                    {Object.entries(Downloadable).map(
+                                        ([Os, OsDetails]) => (
+                                            <Btn
+                                                Link={`${GetFullLink(i.Version, OsDetails.Url(i.Version))}`}
+                                                NewTab={false}
+                                                Title={OsDetails.Bin}
+                                                ConfiguredIcon={
+                                                    Os as AllSupportedOS
+                                                }
+                                            />
+                                        ),
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </div>

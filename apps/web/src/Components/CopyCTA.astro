@@ -1,8 +1,9 @@
 ---
 import { Image } from "astro:assets";
-import { AppName } from "../Utitls/Config";
+import { AppName, Socials } from "../Utitls/Config";
 import { FaStar } from "react-icons/fa";
 import Btn from "./Btn.astro";
+import { MdOutlineInstallDesktop } from "react-icons/md";
 ---
 
 <div
@@ -21,9 +22,29 @@ import Btn from "./Btn.astro";
                 {AppName}
             </div>
         </h1>
-        <p class="max-md:text-xs">
+        <p class="max-md:text-xs text-blue-100/90">
             Your light weight, persistent and encrypted clipboard manager that
             works on Windows, Mac and Linux
         </p>
     </div>
+</div>
+<div class="my-5 text-sm flex flex-col gap-2">
+    <Btn Link={Socials.Github} Title={"Star this project"} NewTab={true}
+        ><FaStar /></Btn
+    >
+    <div id="install-btn" class="cursor-pointer">
+        <Btn Title={"Install Now"} NewTab={false}
+            ><MdOutlineInstallDesktop /></Btn
+        >
+    </div>
+    <script>
+        const installBtn = document.getElementById("install-btn");
+        installBtn?.addEventListener("click", () => {
+            const targetSection = document.getElementById("Install");
+            targetSection?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        });
+    </script>
 </div>

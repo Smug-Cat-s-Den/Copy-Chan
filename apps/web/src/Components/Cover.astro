@@ -1,24 +1,16 @@
 ---
-import { Image } from "astro:assets";
-import Btn from "./Btn.astro";
-import { FaStar } from "react-icons/fa";
+import { BgCover } from "../Utitls/Config";
 ---
 
 <div
     class="relative w-full h-100 max-md:h-70 mask-b-from-50% border-blue-600 border-t-4 border-x-4 rounded-md"
 >
-    <Image
+    <!-- <Image
         src={"/bg.gif"}
         alt={"Cover"}
         width={200}
         height={200}
         class={"object-cover w-full h-full rounded-md"}
-    />
-    <div class="absolute z-10 text-sm top-2 right-2">
-        <Btn
-            Title={"Star the project!"}
-            Link={"https://github.com/Smug-Cat-s-Den/Copy-Chan"}
-            NewTab={true}><FaStar /></Btn
-        >
-    </div>
+    /> -->
+    <video muted autoplay><source src={BgCover} />Video not supported</video>
 </div>

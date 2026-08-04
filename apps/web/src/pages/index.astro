@@ -1,9 +1,10 @@
 ---
 import CopyCTA from "../Components/CopyCTA.astro";
 import Cover from "../Components/Cover.astro";
+import Features from "../Components/Features.astro";
 import Footer from "../Components/Footer.astro";
 import Releases from "../Components/Releases.astro";
-import Socials from "../Components/Socials.astro";
+import TopBar from "../Components/TopBar.astro";
 import "../styles/global.css";
 
 //
@@ -19,16 +20,17 @@ import "../styles/global.css";
         <title>copychan</title>
     </head>
     <body
-        class="bg-linear-to-b to-black from-blue-700  min-h-screen bg-no-repeat"
+        class="bg-linear-to-b to-black from-blue-700 min-h-screen bg-no-repeat"
     >
         <main>
             <div class="max-w-3xl w-full h-full mx-auto p-2">
+                <TopBar />
                 <Cover />
                 <div
                     class="w-full h-full flex flex-col justify-center items-center"
                 >
                     <CopyCTA />
-                    <Socials />
+                    <Features />
                     <Releases />
                     <Footer />
                 </div>
