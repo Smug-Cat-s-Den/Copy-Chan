@@ -82,7 +82,7 @@ function App() {
           {ActiveTab.label === "Settings" && <Settings />}
         </div>
         {AppVersion.toLocaleLowerCase().includes("preview") && (
-          <div className="h-15 text-right w-full text-[12px] text-gray-400 px-5">
+          <div className="h-0 text-right w-full text-[12px] text-gray-400 px-5">
             preview build {AppVersion.replace("-preview", "")} - experimental
           </div>
         )}

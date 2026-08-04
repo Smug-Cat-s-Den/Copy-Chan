@@ -23,7 +23,7 @@
         "visible": false,
         "skipTaskbar": true,
         "closable": true,
-        "transparent": false,
+        "transparent": true,
         "acceptFirstMouse": true,
         "contentProtected": false,
         "theme": "Dark"

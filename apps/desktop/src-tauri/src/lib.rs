@@ -125,10 +125,6 @@ pub fn run() {
         .plugin(tauri_plugin_global_shortcut::Builder::default().build())
         .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
-            //open dev tools
-            let window = app.get_webview_window("main").unwrap();
-            // window.open_devtools();
-
             set_global_data_path(app).map_err(|e| e)?;
             load_history().map_err(|e| e.to_string())?;
             listen_to_clipbord(app);
