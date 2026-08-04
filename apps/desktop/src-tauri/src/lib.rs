@@ -87,13 +87,13 @@ fn close_programe(app_handle: AppHandle) {
 
 #[tauri::command]
 fn show_window(app: tauri::AppHandle) {
-    // println!("window will show");
-    window_pos(app, false);
+    // println!("window will show"); //debug
+    window_pos(&app, false);
 }
 
 #[tauri::command]
 fn show_window_using_shortcut(app: tauri::AppHandle) {
-    window_pos(app, true);
+    window_pos(&app, true);
     // println!("window will show"); //debug
 }
 
@@ -124,11 +124,15 @@ pub fn run() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::default().build())
         .plugin(tauri_plugin_dialog::init())
-        .setup(|app_handle| {
-            set_global_data_path(app_handle).map_err(|e| e)?;
+        .setup(|app| {
+            //open dev tools
+            let window = app.get_webview_window("main").unwrap();
+            // window.open_devtools();
+
+            set_global_data_path(app).map_err(|e| e)?;
             load_history().map_err(|e| e.to_string())?;
-            listen_to_clipbord(app_handle);
-            setup_config(app_handle)?;
+            listen_to_clipbord(app);
+            setup_config(app)?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

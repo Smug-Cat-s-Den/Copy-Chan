@@ -24,7 +24,7 @@ const SearchBox = ({ Searchdata, SetFiltered }: props) => {
 
   return (
     <div>
-      <div className="flex justify-between gap-3">
+      <div className="flex justify-between gap-3 animate-fade-in">
         <form className="dark:bg-linear-to-r from-blue-500/30 via-blue-700 to-blue-900/20  bg-blue-400/20 backdrop-blur-md flex items-center w-full px-2 rounded-md h-8">
           <BiSearch className="hover:scale-115" />
           <input

@@ -11,6 +11,7 @@ type NavProps = {
 };
 
 const Nav = ({ ActiveTab, SetActiveTab }: NavProps) => {
+
   const items: TabItem[] = [
     { label: "Copy", icon: <BiClipboard /> },
     { label: "Emoji", icon: <BsEmojiSmile /> },

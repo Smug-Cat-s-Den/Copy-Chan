@@ -1,7 +1,7 @@
 use mouse_position::mouse_position::Mouse;
 use tauri::{AppHandle, Manager, Monitor, PhysicalPosition, WebviewWindow};
 
-pub fn window_pos(app: AppHandle, is_shortcut: bool) {
+pub fn window_pos(app: &AppHandle, is_shortcut: bool) {
     if let Some(main_window) = app.get_webview_window("main") {
         let pos = Mouse::get_mouse_position();
         match pos {

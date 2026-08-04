@@ -1,10 +1,15 @@
-use crate::get_max_entries_mutex;
-use tauri::Runtime;
+use crate::{core::window_pos::window_pos, get_max_entries_mutex};
+use tauri::{App, Runtime};
 use tauri_plugin_store::StoreExt;
 
-pub fn setup_config(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
+pub fn setup_config(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     let store = app.store("config.json")?;
     setup_max_entires(&store);
+    //check onboarded or not
+    let onboarded = store.get("Onboarded");
+    if onboarded.is_none() {
+        window_pos(app.handle(), false) //opens the app on near the system tray
+    }
     Ok(())
 }
 

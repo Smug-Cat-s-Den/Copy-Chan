@@ -3,12 +3,13 @@ import { Emojies, GroupedEmojies } from "../types/app.types";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { Store } from "@tauri-apps/plugin-store";
 import { invoke } from "@tauri-apps/api/core";
-import { getVersion } from "@tauri-apps/api/app";
+import { getName, getVersion } from "@tauri-apps/api/app";
 
 export const appWindow = getCurrentWindow();
 export const currentWindow = WebviewWindow.getCurrent();
 export const store = await Store.load("config.json", { autoSave: false });
 export const AppVersion = await getVersion();
+export const AppName = await getName();
 /*
 Copy logic shared between Emoji picker and Clipboard tab
 */

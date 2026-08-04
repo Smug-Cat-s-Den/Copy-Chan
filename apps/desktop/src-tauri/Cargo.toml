@@ -23,6 +23,7 @@ tauri = { version = "2.9.5", features = [
     "protocol-asset",
     "tray-icon",
     "image-png",
+    "devtools"
 ] }
 tauri-plugin-opener = "2.5.3"
 serde = { version = "1", features = ["derive"] }

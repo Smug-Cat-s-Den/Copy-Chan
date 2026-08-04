@@ -1,6 +1,4 @@
-import { disable, enable, isEnabled } from "@tauri-apps/plugin-autostart";
-import { useCallback, useEffect, useState } from "react";
-import { SliderButton } from "../SliderButton";
+import { useEffect, useState } from "react";
 import RecordKeyBind from "../RecordKeyBind";
 import Warning from "../settings/Warning";
 import { QuickAcces, QuickAccesShortcut } from "../../Utils/RegisterShortcut";
@@ -8,19 +6,11 @@ import { keybinds } from "../../Utils/Keybinds";
 import { invoke } from "@tauri-apps/api/core";
 import { store } from "../../Utils/Utils";
 import Footer from "../Footer";
+import EnableStartUp from "../settings/EnableStartUp";
 
 const Settings = () => {
-  const [isStartUpEnabled, SetStartUp] = useState<boolean>(true);
   const [DefaultMaxEntires, SetDefaultMaxEntires] = useState<number>();
   const [isValidEntry, setisValidEntry] = useState<boolean>(true);
-
-  /*
-    Startup check
-  */
-  const StartUpCheck = useCallback(async () => {
-    let isStartUpEnabled = await isEnabled();
-    SetStartUp(isStartUpEnabled);
-  }, [isEnabled]);
 
   /*
     Function to update the maximum number of entries user can add
@@ -44,26 +34,17 @@ const Settings = () => {
     SetDefaultMaxEntires(enties ?? 20);
   };
 
-  const HandleStartUp = () => {
-    isStartUpEnabled ? disable() : enable();
-    StartUpCheck();
-  };
-
   /**
    * Settings entry point
    */
   useEffect(() => {
-    StartUpCheck();
     FetchFromConfig();
   }, []);
 
   return (
     <main className="px-3 animate-fade-in">
       <section className="bg-blue-600/20 p-3 rounded-md">
-        <div className="flex justify-between items-center">
-          <span className="font-semibold">Enable StartUp</span>
-          <SliderButton value={isStartUpEnabled} SetValue={SetStartUp} DoSomthing={HandleStartUp} />
-        </div>
+        <EnableStartUp />
         <p className="text-[13px] mt-3  text-gray-300">
           Automatically launches the application as soon as your operating system boots up
         </p>
