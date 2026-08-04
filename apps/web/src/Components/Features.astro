@@ -1,0 +1,78 @@
+---
+import type { IconType } from "react-icons";
+import {
+    FaHistory,
+    FaImage,
+    FaLock,
+    FaMousePointer,
+    FaRocket,
+    FaSmile,
+    FaStream,
+} from "react-icons/fa";
+import { MdFeaturedPlayList } from "react-icons/md";
+import { AppName } from "../Utitls/Config";
+
+interface FeaturesType {
+    Title: string;
+    Desc: string;
+    Logo: IconType;
+}
+
+const Features: FeaturesType[] = [
+    {
+        Title: "Secure Data Encryption",
+        Desc: "Your clipboard data is fully encrypted. Passwords, sensitive texts, and private notes remain strictly safe and local to your machine.",
+        Logo: FaLock,
+    },
+    {
+        Title: "Rich Image Snippets",
+        Desc: "Go beyond plain text. Seamlessly copy, preview, and manage image snippets directly from your clipboard history for a highly visual workflow.",
+        Logo: FaImage,
+    },
+    {
+        Title: "Persistent History",
+        Desc: "Never lose a copied item to a reboot. Your clipboard history persists across restarts, with a customizable limit of up to 100 records.",
+        Logo: FaHistory,
+    },
+    {
+        Title: "Smart Cursor Tracking",
+        Desc: "Hit your customizable global shortcut and the app instantly launches right at your mouse cursor's exact location for lightning-fast pasting.",
+        Logo: FaMousePointer,
+    },
+    {
+        Title: "Emojis & Symbols Hub",
+        Desc: "Express yourself faster. Access a dedicated section for picking emojis and special symbols without needing to open a separate system menu.",
+        Logo: FaSmile,
+    },
+    {
+        Title: "Lightweight",
+        Desc: "Built with Tauri to deliver a native desktop experience, feeling incredibly snappy and responsive.",
+        Logo: FaRocket,
+    },
+];
+---
+
+<div class="h-fit w-full font-mono text-white px-2 xl:px-0">
+    <h1 class="text-4xl font-bold flex items-center gap-2">
+        <MdFeaturedPlayList /> Features
+    </h1>
+    <p class="text-blue-100/90">What's {AppName} capable of ? check this out</p>
+    <div class="my-10 grid grid-cols-1 2xl:grid-cols-2 gap-5">
+        {
+            Features.map((i) => {
+                const Icon = i.Logo;
+                return (
+                    <div class="bg-blue-700/60 border-2 border-blue-700/60 h-full p-2 rounded-md">
+                        <h1 class="flex xl:text-xl text-lg items-center gap-2 text-md font-bold pb-2">
+                            <span>
+                                <Icon />
+                            </span>
+                            <span>{i.Title}</span>
+                        </h1>
+                        <p class="text-blue-100/70 text-sm">{i.Desc}</p>
+                    </div>
+                );
+            })
+        }
+    </div>
+</div>
