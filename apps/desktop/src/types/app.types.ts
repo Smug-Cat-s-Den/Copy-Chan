@@ -7,6 +7,7 @@ export interface history {
   id: string;
   item: string;
   pinned?: boolean;
+  is_image?: boolean;
 }
 
 export interface Emojies {

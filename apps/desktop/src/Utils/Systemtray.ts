@@ -3,7 +3,7 @@ import { Menu } from "@tauri-apps/api/menu";
 import { invoke } from "@tauri-apps/api/core";
 import { resolveResource } from "@tauri-apps/api/path";
 
-export async function setupTray() {
+export async function SetupTray() {
   const menu = await Menu.new({
     items: [
       {
@@ -30,6 +30,5 @@ export async function setupTray() {
     menu,
     menuOnLeftClick: true,
   });
-  console.log("tray called");
   return tray;
 }

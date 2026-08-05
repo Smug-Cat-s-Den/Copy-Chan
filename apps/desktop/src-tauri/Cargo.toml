@@ -1,6 +1,6 @@
 [package]
 name = "copy-chan"
-version = "0.0.9"
+version = "1.0.805"
 description = "Your smol :3 and encrypted persistent clipboard manager"
 authors = ["Adi, Smug Cat's"]
 edition = "2021"
@@ -23,6 +23,7 @@ tauri = { version = "2.9.5", features = [
     "protocol-asset",
     "tray-icon",
     "image-png",
+    # "devtools"
 ] }
 tauri-plugin-opener = "2.5.3"
 serde = { version = "1", features = ["derive"] }
@@ -43,6 +44,11 @@ aes-gcm = "0.11.0"
 tauri-plugin-prevent-default = "5"
 tauri-plugin-store = "2"
 enigo = "0.6.1"
+image = "0.25.10"
+base64 = "0.23.0"
+tauri-plugin-log = "2"
+arboard = { version = "3.6.1", features = ["wayland-data-control"] }
+
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.

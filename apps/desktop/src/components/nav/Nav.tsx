@@ -11,10 +11,11 @@ type NavProps = {
 };
 
 const Nav = ({ ActiveTab, SetActiveTab }: NavProps) => {
+
   const items: TabItem[] = [
     { label: "Copy", icon: <BiClipboard /> },
-    { label: "Symbols", icon: <SiSymbolab /> },
     { label: "Emoji", icon: <BsEmojiSmile /> },
+    { label: "Symbols", icon: <SiSymbolab /> },
     { label: "Settings", icon: <FaGear /> },
   ];
 
@@ -37,7 +38,7 @@ const Nav = ({ ActiveTab, SetActiveTab }: NavProps) => {
         ))}
       </div>
       <button
-        className="mb-3 hover:bg-red-500 mr-2 p-2 rounded-md focus:outline-1 focus:outline-blue-600"
+        className="mb-3 hover:bg-red-500 mr-2 p-2 rounded-md outline-none"
         onClick={() => {
           (getCurrentWindow().hide(), SetActiveTab(items[0]));
         }}

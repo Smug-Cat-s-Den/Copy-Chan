@@ -70,10 +70,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: app-v__VERSION__
-          releaseName: "build __VERSION__"
-          releaseBody: "See the assets to download and install this version."
+          tagName: v__VERSION__
+          releaseName: "__VERSION__"
+          releaseBody: "See the assets to download and install your compatible version. <br><br> The app by default opens in the system tray but you can use **CTRL+ALT+S** to bring the app and then customize your key bind from the settings tab. Startup is disabled by default, you can enable it from there"
           releaseDraft: true
+          prerelease: true
           args: ${{ matrix.args }}
           # --- MONOREPO PATH ADJUSTMENTS ---
           projectPath: "apps/desktop"

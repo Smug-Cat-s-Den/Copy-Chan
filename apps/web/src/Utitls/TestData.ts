@@ -1,0 +1,56 @@
+export const mockReleases = [
+  {
+    id: 12345678,
+    node_id: "MDM6UmVsZWFzZTEyMzQ1Njc4",
+    tag_name: "v1.1.0",
+    target_commitish: "main",
+    name: "v1.1.0 - Performance Boost & Bug Fixes",
+    body: "Here are the latest changes for Copy-Chan...",
+    draft: false,
+    prerelease: false,
+    created_at: "2026-06-01T12:00:00Z",
+    published_at: "2026-06-01T12:30:00Z",
+    author: {
+      login: "Smug-Cat",
+      id: 87654321,
+      node_id: "MDQ6VXNlcjg3NjU0MzIx",
+      avatar_url: "https://avatars.githubusercontent.com/u/87654321?v=4",
+      html_url: "https://github.com/Smug-Cat",
+      type: "User",
+      site_admin: false,
+    },
+    assets: [],
+    html_url: "https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/tag/v1.1.0",
+    tarball_url:
+      "https://api.github.com/repos/Smug-Cat-s-Den/Copy-Chan/tarball/v1.1.0",
+    zipball_url:
+      "https://api.github.com/repos/Smug-Cat-s-Den/Copy-Chan/zipball/v1.1.0",
+  },
+  {
+    id: 12345677,
+    node_id: "MDM6UmVsZWFzZTEyMzQ1Njc3",
+    tag_name: "v1.0.0",
+    target_commitish: "main",
+    name: "v1.0.0 - Initial Release",
+    body: "First stable release of Copy-Chan!",
+    draft: false,
+    prerelease: false,
+    created_at: "2026-05-01T10:00:00Z",
+    published_at: "2026-05-01T10:15:00Z",
+    author: {
+      login: "Smug-Cat",
+      id: 87654321,
+      node_id: "MDQ6VXNlcjg3NjU0MzIx",
+      avatar_url: "https://avatars.githubusercontent.com/u/87654321?v=4",
+      html_url: "https://github.com/Smug-Cat",
+      type: "User",
+      site_admin: false,
+    },
+    assets: [],
+    html_url: "https://github.com/Smug-Cat-s-Den/Copy-Chan/releases/tag/v1.0.0",
+    tarball_url:
+      "https://api.github.com/repos/Smug-Cat-s-Den/Copy-Chan/tarball/v1.0.0",
+    zipball_url:
+      "https://api.github.com/repos/Smug-Cat-s-Den/Copy-Chan/zipball/v1.0.0",
+  },
+];

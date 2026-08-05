@@ -1,8 +1,7 @@
 @import "tailwindcss";
-
 /* Keep the page font fallback and small reset, but let Tailwind handle layout and colors */
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, Avenir, sans-serif;
 }
 
 button {

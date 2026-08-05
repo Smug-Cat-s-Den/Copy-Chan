@@ -2,6 +2,7 @@ import { memo, useMemo, useState } from "react";
 import { HandleCopy, ParseAndGroupEmoji } from "../../Utils/Utils";
 import SearchBox from "../SearchBox";
 import { Emojies } from "../../types/app.types";
+import { Virtuoso } from "react-virtuoso";
 
 interface props {
   emotes: Emojies[];
@@ -19,7 +20,7 @@ const EmojiItem = memo(({ index, i }: ElementProps) => {
     <div
       key={index + i.label}
       className="p-2 bg-blue-600/30 relative group rounded-md"
-      onClick={() => HandleCopy(i.emoji)}
+      onClick={() => HandleCopy(i.emoji, false)}
     >
       <span>{i.emoji}</span>
       {/*Disable tip it looks ugly UwU*/}
@@ -37,32 +38,48 @@ const EmojiItem = memo(({ index, i }: ElementProps) => {
 const EmojiPicker = ({ emotes, title }: props) => {
   const [Filtered, SetFiltered] = useState<Emojies[]>(emotes);
   const symbol = useMemo(() => ParseAndGroupEmoji(Filtered), [Filtered]);
+  const [HoverName, setHoverName] = useState("");
 
   return (
-    <main className={`mt-2 mx-2 relative`}>
-      <nav className="sticky top-0 z-10">
-        <SearchBox Searchdata={emotes} SetFiltered={SetFiltered} />
-        <div className="h-3 dark:dark:bg-blue-900 bg-white" />
-      </nav>
+    <main className="mt-2 mx-2 relative">
       <div>
-        {Filtered.length > 0 && symbol ? (
-          Object.entries(symbol).map(([sections, items]) => (
-            <div key={sections}>
-              <h1 className="text-sm m-1 mt-5">{sections}</h1>
-              <div
-                className={`animate-fade-in  ${
-                  sections === "Quaso" ? "grid grid-cols-5 text-[10px]" : "grid grid-cols-7"
-                } grid-rows-1 gap-2`}
-              >
-                {items.map((i, index) => (
-                  <EmojiItem i={i} index={index} sections={sections} key={index} />
-                ))}
-              </div>
+        <div className="h-70">
+          <nav className="sticky top-0 z-10">
+            <SearchBox HoverName={HoverName} Searchdata={emotes} SetFiltered={SetFiltered} />
+            <div className="h-3 dark:dark:bg-blue-900 bg-white" />
+          </nav>
+          {/*needed wrapper for virualization*/}
+          {Filtered.length > 0 && symbol ? (
+            <Virtuoso
+              style={{ height: "100%" }}
+              // totalCount={Object.entries(symbol).length}
+              data={Object.entries(symbol)}
+              itemContent={(_, [sections, items]) => (
+                <div key={sections} className="animate-fade-up">
+                  <h1 className="text-xs m-1 mt-5 text-gray-400">{sections}</h1>
+                  <div
+                    className={`animate-fade-in grid ${
+                      sections === "ASCII Big" ? "grid-cols-3 text-[10px]" : sections === "Patterns" ? "grid-cols-2" : "grid-cols-7"
+                    } grid-rows-1 gap-2`}
+                  >
+                    {items.map((i, index) => (
+                      <div
+                        onMouseEnter={() => setHoverName(i.label)}
+                        onMouseLeave={() => setHoverName("")}
+                      >
+                        <EmojiItem i={i} index={index} sections={sections} key={index} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            />
+          ) : (
+            <div className="mt-1 flex justify-center text-gray-400">
+              found nothing in {title} :(
             </div>
-          ))
-        ) : (
-          <div className="mt-1 flex justify-center">{title} not found</div>
-        )}
+          )}
+        </div>
       </div>
     </main>
   );

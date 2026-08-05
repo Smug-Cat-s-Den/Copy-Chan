@@ -1,0 +1,22 @@
+---
+import { Image } from "astro:assets";
+import { Socials } from "../Utitls/Config";
+import Btn from "./Btn.astro";
+import { FaGithub, FaYoutube } from "react-icons/fa";
+---
+
+<div
+    class="flex gap-2 mt-2 bg-linear-to-r from-white/10 to-white/0 backdrop-blur-lg p-1.5 rounded-md"
+>
+    <a class="rounded-full w-8 h-8 overflow-hidden" href={Socials.AdiGitHub} target="_blank">
+        <Image
+            src={"https://avatars.githubusercontent.com/u/166864125?v=4"}
+            alt={"Me"}
+            width={50}
+            height={50}
+            class="object-cover"
+        />
+    </a>
+    <Btn Link={Socials.Github} Title={""} NewTab={true}><FaGithub /></Btn>
+    <Btn Link={Socials.Youtube} Title={""} NewTab={true}><FaYoutube /></Btn>
+</div>

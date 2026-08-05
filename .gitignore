@@ -1,3 +1,6 @@
+#Editor
+.zed
+
 # Node modules (applies to root and all workspaces)
 node_modules/
 .pnpm-store/

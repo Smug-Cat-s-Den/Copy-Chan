@@ -51,22 +51,15 @@ pub fn encrypt_data(data: String) -> Result<Vec<u8>, String> {
 
     let key = Key::<Aes256Gcm>::from(key_bytes);
     let cipher = Aes256Gcm::new(&key);
-    /*
-     * generating the nonce
-     * This should be generated every time there is a need for encrypting somthing
-     */
+
     let mut nonce_bytes = [0u8; 12];
     rand::rng().fill(&mut nonce_bytes);
     let nonce = Nonce::from(nonce_bytes);
-    /*
-     encrypting the serialized data
-    */
+
     let ciphertext = cipher
         .encrypt(&nonce, data.as_bytes())
         .map_err(|e| e.to_string())?;
-    /*
-     Preparing the final encrypted data and appending the serialized data
-    */
+
     let mut final_output: Vec<u8> = Vec::new();
     final_output.extend_from_slice(&nonce);
     final_output.extend_from_slice(&ciphertext);
@@ -83,9 +76,7 @@ pub fn decrypt_data(encrypted_file: &Vec<u8>) -> Result<String, String> {
     if encrypted_file.len() < 12 {
         return Err(String::from("File may have been corrupted"));
     }
-    /*
-     * Prepare cipher config with the key
-     */
+
     let key_bytes: [u8; 32] = (&*SYSTEM_ENCRYPTION_KEY)
         .as_slice()
         .try_into()
@@ -93,18 +84,13 @@ pub fn decrypt_data(encrypted_file: &Vec<u8>) -> Result<String, String> {
 
     let key = Key::<Aes256Gcm>::from(key_bytes);
     let cipher = Aes256Gcm::new(&key);
-    /*
-     * Destructure nonce and cipher text from the encrypted file
-     * and then extracting and fromating the nonce to prepare the file for decryption
-     */
+
     let (nonce_slice, cipher_text) = encrypted_file.split_at(12); // here spliting at 12th index because the nonce is 12 bit
     let nonce_bytes: [u8; 12] = nonce_slice
         .try_into()
         .expect("Failed to extract 12 bit nonce");
     let nonce = Nonce::from(nonce_bytes);
-    /*
-     * Finally prepare the decrypted bytes into serialized string
-     */
+
     let unecrypted_bytes = cipher
         .decrypt(&nonce, cipher_text)
         .map_err(|e| e.to_string())?;
