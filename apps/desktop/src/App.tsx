@@ -63,7 +63,7 @@ function App() {
         }
       }
     };
-  }, []);
+  }, [isOnboarded]);
 
   if (!isOnboarded) return <Onboarding setisOnboarded={setisOnboarded} />;
   else

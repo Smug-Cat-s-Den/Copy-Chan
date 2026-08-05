@@ -1,6 +1,6 @@
 import { BsYoutube } from "react-icons/bs";
 import { GrGithub } from "react-icons/gr";
-import { AppVersion } from "../Utils/Utils";
+import { AppName, AppVersion } from "../Utils/Utils";
 
 const gh = "https://github.com/Smug-Cat-s-Den/Copy-Chan";
 const yt = "https://www.youtube.com/@smug_cats_den";
@@ -9,11 +9,11 @@ export default function Footer() {
   return (
     <footer>
       <div className="text-[15px] mt-3  text-gray-300 px-2 font-bold">
-        Copy Chan - Smol Clipboard manager :3
+        {AppName}
       </div>
       <div className="text-[12px]  text-gray-300 px-2">
-        This project is maintained and developed by Adi under Smug Cat's. Thank you for using Copy
-        Chan :)
+        This project is maintained and developed by Adi under Smug Cat's. Thank you for using{" "}
+        {AppName} :)
       </div>
       <section className="select-none mt-2 flex gap-2 items-end">
         <img src={"/Copychan.png"} alt="copychan" draggable="false" width={80} />
