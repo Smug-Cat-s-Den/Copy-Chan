@@ -62,10 +62,10 @@ const Features: FeaturesType[] = [
             Features.map((i) => {
                 const Icon = i.Logo;
                 return (
-                    <div class="bg-blue-700/60 border-2 border-blue-700/60 h-full p-2 rounded-md">
-                        <h1 class="flex xl:text-xl text-lg items-center gap-2 text-md font-bold pb-2">
-                            <span>
-                                <Icon />
+                    <div class="bg-blue-700/60 hover:bg-linear-to-r from-blue-700/20 to-blue-700/90 shadow-inner shadow-blue-600 border-2 border-blue-700/60  h-full p-2 rounded-md">
+                        <h1 class="flex xl:text-xl text-lg items-center gap-3 font-bold pb-2">
+                            <span class="text-2xl">
+                                <Icon/>
                             </span>
                             <span>{i.Title}</span>
                         </h1>

@@ -1,8 +1,33 @@
 ---
 import { Socials } from "../Utitls/Config";
+import { ImWindows } from "react-icons/im";
 ---
 
-<div class="text-white font-sans text-sm p-2">
+<div class="text-white font-sans text-sm p-2 group text-center">
+    <div
+        class="group-hover:text-white text-black flex gap-2 items-center justify-center transition duration-700 ease-in"
+    >
+        miss the <ImWindows />
+        <div class="">
+            <span
+                class="group-hover:text-red-400 transition duration-400 ease-in"
+                >X</span
+            ><span
+                class="group-hover:text-green-500 transition duration-500 ease-in"
+                >P</span
+            >{" "}
+            <span
+                class="group-hover:text-blue-500 transition duration-700 ease-in"
+                >er</span
+            >
+            <span
+                class="group-hover:text-yellow-500 transition duration-800 ease-in"
+                >a ?
+            </span>
+            {" "}
+            me too
+        </div>
+    </div>
     made by <a
         href={Socials.Adi}
         target="_blank"
